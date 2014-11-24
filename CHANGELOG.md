@@ -1,3 +1,6 @@
+## v0.4.4.1 (24 Nov 2014) ##
+ - fixed problem with different reply amounts depending on the firmware release
+
 ## v0.4.4 (26 Oct 2014) ##
  - program affects only 'Extended color lights'
  - add more / changed debug informations
