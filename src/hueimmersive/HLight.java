@@ -18,7 +18,7 @@ public class HLight
 		name = response.get("name").getAsString();
 		uniqueid = response.get("uniqueid").getAsString();
 		
-		Settings.Light.checkSettings(uniqueid);
+		Settings.Light.checkSettings(this);
 	}
 	
 	public boolean isOn() throws Exception

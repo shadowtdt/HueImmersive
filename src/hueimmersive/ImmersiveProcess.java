@@ -295,9 +295,8 @@ public class ImmersiveProcess
 	{
 		for (HLight light : HBridge.lights)
 		{
-			String uniqueid = light.uniqueid;
-			boolean active = Settings.Light.getActive(uniqueid);
-			int alg = Settings.Light.getAlgorithm(uniqueid);
+			boolean active = Settings.Light.getActive(light);
+			int alg = Settings.Light.getAlgorithm(light);
 			
 			if(active == true)
 			{

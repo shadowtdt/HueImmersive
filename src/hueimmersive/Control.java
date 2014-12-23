@@ -33,7 +33,7 @@ public class Control
 	{		
 		float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
 		
-		color = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light.uniqueid) / 100f))); // modified color
+		color = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
 		
 		double[] xy = HColor.translate(color, Settings.getBoolean("gammacorrection")); // xy color
 		int bri = Math.round(Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null)[2] * 255); // brightness
@@ -136,7 +136,7 @@ public class Control
 	{
 		for(HLight light : HBridge.lights)
 		{
-			if (Settings.Light.getActive(light.uniqueid))
+			if (Settings.Light.getActive(light))
 			{
 				light.turnOn();
 			}
@@ -148,7 +148,7 @@ public class Control
 	{
 		for(HLight light : HBridge.lights)
 		{
-			if (Settings.Light.getActive(light.uniqueid))
+			if (Settings.Light.getActive(light))
 			{
 				light.turnOff();
 			}
