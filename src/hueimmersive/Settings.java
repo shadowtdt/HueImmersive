@@ -58,6 +58,7 @@ public class Settings
 		prefs.putInt("oi_y", 450);
 		prefs.putInt("chunks", 12);
 		prefs.putInt("brightness", 100);
+		prefs.putInt("saturation", 100);
 		prefs.putInt("format", 0);
 		prefs.putBoolean("colorgrid", false);
 		prefs.putBoolean("restorelight", true);

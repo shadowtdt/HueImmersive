@@ -45,6 +45,7 @@ import java.awt.Font;
 import java.awt.Color;
 
 import javax.swing.ImageIcon;
+import java.awt.BorderLayout;
 
 
 public class UserInterface
@@ -77,6 +78,10 @@ public class UserInterface
 	private JMenuItem menuitem_Reset;
 	private Component rigidarea;
 	public ColorGridInterface cpi = new ColorGridInterface();
+	private JLabel label_Saturation;
+	private JPanel panel_Saturation;
+	public JSlider slider_Saturation;
+	private JLabel label_SaturationPercentage;
 	
 	public UserInterface() throws Exception
 	{
@@ -139,7 +144,7 @@ public class UserInterface
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setResizable(false);
 		frame.setTitle("Hue Immersive");
-		frame.setBounds(100, 100, 240, 237);
+		frame.setBounds(100, 100, 240, 270);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation(Settings.getInteger("ui_x"), Settings.getInteger("ui_y"));
 		frame.addWindowListener(new WindowAdapter() {
@@ -155,16 +160,15 @@ public class UserInterface
 
 		Debug.info(null, "interface initialized");
 		
-		//loadMainInterface(); // uncomment to edit in Window Builder
+		loadMainInterface(); // uncomment to edit MainInterface in Window Builder
+		//loadConnectionInterface(); // uncomment to edit ConnectionInterface in Window Builder
 	}
 	
 	public void loadConnectionInterface() throws Exception // load the connection interface
 	{
-		// setup window
-		frame.getContentPane().setLayout(null);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		labelConnect = new JLabel("");
 		labelConnect.setHorizontalAlignment(SwingConstants.CENTER);
-		labelConnect.setBounds(0, 0, 234, 208);
 		frame.getContentPane().add(labelConnect);
 		frame.setVisible(true);
 		setConnectState(0);
@@ -209,6 +213,7 @@ public class UserInterface
 				ColumnSpec.decode("5dlu:grow"),
 				ColumnSpec.decode("10dlu:grow(2)"),},
 			new RowSpec[] {
+				RowSpec.decode("24px:grow"),
 				RowSpec.decode("24px:grow"),
 				RowSpec.decode("24px:grow"),
 				RowSpec.decode("24px:grow"),
@@ -314,7 +319,6 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(checkbox_ShowColorGrid, "1, 5, 4, 1");
 		
 		// Label "chunks"
 		JLabel label_Chunks = new JLabel("   chunks");
@@ -388,13 +392,49 @@ public class UserInterface
 		slider_Brightness.setMinimum(5);
 		slider_Brightness.setValue(Settings.getInteger("brightness"));
 		slider_Brightness.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0)
+			public void stateChanged(ChangeEvent e)
 			{
 				label_BrightnessPercentage.setText(String.valueOf(slider_Brightness.getValue()) + " %");
 				Settings.set("brightness", slider_Brightness.getValue());
 			}
 		});
 		panel_Brightness.add(slider_Brightness, "1, 1, center, center");
+		
+		// Label "saturation"
+		label_Saturation = new JLabel("   saturation");
+		label_Saturation.setHorizontalAlignment(SwingConstants.LEFT);
+		frame.getContentPane().add(label_Saturation, "1, 5, left, center");
+		
+		// Panel to hold saturation Slider and saturation percentage Label
+		panel_Saturation = new JPanel();
+		frame.getContentPane().add(panel_Saturation, "2, 5, 3, 1, fill, fill");
+		panel_Saturation.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("115px"),
+				ColumnSpec.decode("right:38px:grow"),},
+			new RowSpec[] {
+				RowSpec.decode("26px"),}));
+		
+		// Slider saturation
+		slider_Saturation = new JSlider();
+		slider_Saturation.setToolTipText("set how saturated your lights should be");
+		slider_Saturation.setMaximum(150);
+		slider_Saturation.setMinorTickSpacing(5);
+		slider_Saturation.setMinimum(50);
+		slider_Saturation.setValue(Settings.getInteger("saturation"));
+		slider_Saturation.setSnapToTicks(true);
+		slider_Saturation.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) 
+			{
+				label_SaturationPercentage.setText(String.valueOf(slider_Saturation.getValue()) + " %");
+				Settings.set("saturation", slider_Saturation.getValue());
+			}
+		});
+		panel_Saturation.add(slider_Saturation, "1, 1, center, center");
+		
+		// Label saturation percentage
+		label_SaturationPercentage = new JLabel(Settings.getInteger("saturation") + " %");
+		panel_Saturation.add(label_SaturationPercentage, "2, 1, center, center");
+		frame.getContentPane().add(checkbox_ShowColorGrid, "1, 6, 4, 1");
 		
 		// CheckBox restore light
 		checkbox_RestoreLight = new JCheckBox("   restore light (experimental v1)");
@@ -406,7 +446,7 @@ public class UserInterface
 			}
 		});
 		checkbox_RestoreLight.setSelected(Settings.getBoolean("restorelight"));
-		frame.getContentPane().add(checkbox_RestoreLight, "1, 6, 4, 1");
+		frame.getContentPane().add(checkbox_RestoreLight, "1, 7, 4, 1");
 		
 		// Button stop
 		button_Stop = new JButton("STOP");
@@ -424,7 +464,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Stop, "1, 7, fill, center");
+		frame.getContentPane().add(button_Stop, "1, 8, fill, center");
 		
 		// Button start
 		button_Start = new JButton("START");
@@ -442,7 +482,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Start, "2, 7, 2, 1, default, center");
+		frame.getContentPane().add(button_Start, "2, 8, 2, 1, default, center");
 		
 		// Button once
 		button_Once = new JButton("ONCE");
@@ -459,7 +499,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Once, "4, 7, default, center");
+		frame.getContentPane().add(button_Once, "4, 8, default, center");
 		
 		// MenuBar
 		menubar = new JMenuBar();
