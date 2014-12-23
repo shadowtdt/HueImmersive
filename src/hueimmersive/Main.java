@@ -46,6 +46,7 @@ public class Main
 				"os: " + System.getProperty("os.name"),
 				"java version: " + System.getProperty("java.version"));
 		
+		Settings.check();
 		Settings.debug();
 		Settings.Bridge.debug();
 		Settings.Light.debug();

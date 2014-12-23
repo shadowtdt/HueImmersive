@@ -12,7 +12,7 @@ public class Settings
 	public static SettingsLight Light = new SettingsLight();
 	public static SettingsBridge Bridge = new SettingsBridge();
 	
-	static // independent setup
+	public static void check()
 	{
 		try
 		{
@@ -162,7 +162,7 @@ class SettingsLight // light settings
 	private int nexAlg = 0;
 	private int maxAlg = ImmersiveProcess.algorithms;
 	
-	public void checkSettings(HLight light) throws Exception // setup default light settings if it doesn't have
+	public void check(HLight light) throws Exception // setup default light settings if it doesn't have
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		if (lprefs.get("active", null) == null)
