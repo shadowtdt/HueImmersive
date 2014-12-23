@@ -160,7 +160,7 @@ public class UserInterface
 
 		Debug.info(null, "interface initialized");
 		
-		loadMainInterface(); // uncomment to edit MainInterface in Window Builder
+		//loadMainInterface(); // uncomment to edit MainInterface in Window Builder
 		//loadConnectionInterface(); // uncomment to edit ConnectionInterface in Window Builder
 	}
 	
