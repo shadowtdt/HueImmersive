@@ -7,28 +7,16 @@ import java.util.prefs.Preferences;
 
 public class Settings
 {
-	private static Preferences prefs = Preferences.userRoot();
+	private static Preferences prefs = Preferences.userRoot().node("/hueimmersive");
 	
 	public static SettingsLight Light = new SettingsLight();
 	public static SettingsBridge Bridge = new SettingsBridge();
 	
-	public static void check()
+	public static void check() throws Exception
 	{
-		try
+		if (prefs.node("/hueimmersive").keys().length == 0)
 		{
-			if (prefs.node("/hueimmersive").keys().length != 0)
-			{
-				prefs = Preferences.userRoot().node("/hueimmersive");
-			}
-			else
-			{
-				prefs = Preferences.userRoot().node("/hueimmersive");
-				setDefaultSettings();
-			}
-		}
-		catch(Exception e)
-		{
-			Debug.exception(e);
+			setDefaultSettings();
 		}
 	}
 	

@@ -44,8 +44,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.Font;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 
 public class OptionInterface
