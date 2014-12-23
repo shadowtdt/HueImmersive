@@ -57,6 +57,8 @@ public class HBridge
 		}
 		else
 		{
+			Debug.info(null, "can't find bridge");
+			
 			newConnect();
 		}
 	}
@@ -86,6 +88,8 @@ public class HBridge
 						internalipaddress = response.get("internalipaddress").getAsString();
 						
 						Settings.Bridge.setInternalipaddress(internalipaddress);
+						
+						Debug.info(null, "bridge found");
 						
 						login();
 					}
