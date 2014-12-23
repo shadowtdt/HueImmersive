@@ -9,9 +9,7 @@ import com.google.gson.*;
 
 public class HBridge
 {
-	public static String name;
 	public static String internalipaddress = Settings.Bridge.getInternalipaddress();
-	public static String macaddress;
 
 	public static final String username = "hueimmersiveuser";
 	public static final String devicetype = "hueimmersive";
@@ -50,9 +48,6 @@ public class HBridge
 		
 		if (HRequest.responseCheck(response) == "data")
 		{
-			name = response.get("name").getAsString();
-			macaddress = response.get("mac").getAsString();
-			
 			Debug.info(null, "fast connect successfull");
 
 			debug();
@@ -88,9 +83,7 @@ public class HBridge
 						timer.cancel();
 						timer.purge();
 						
-						name = response.get("name").getAsString();
 						internalipaddress = response.get("internalipaddress").getAsString();
-						macaddress = response.get("macaddress").getAsString();
 						
 						Settings.Bridge.setInternalipaddress(internalipaddress);
 						
@@ -149,7 +142,6 @@ public class HBridge
 		Debug.info("bridge infos", 
 				"name: " + response.get("name").getAsString(), 
 				"ipaddress: " + response.get("ipaddress").getAsString(), 
-				"macaddress: " + "secret",
 				"timezone: " + response.get("timezone").getAsString(),
 				"swversion: " + response.get("swversion").getAsString(),
 				"apiversion: " + response.get("apiversion").getAsString());
