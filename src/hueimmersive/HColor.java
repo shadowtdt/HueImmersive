@@ -69,11 +69,6 @@ public class HColor
 	    else if(hsbColor[2] < 1.5f / 255f && (hsbColor[0] > 0.78 && hsbColor[0] < 0.87))
 	    {
 	    	xy = xyDefault;
-	    	System.out.println("purple");
-	    }
-	    else
-	    {
-	    	System.out.println("-");
 	    }
 	    
 	    return xy;
