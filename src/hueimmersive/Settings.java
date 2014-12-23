@@ -14,7 +14,34 @@ public class Settings
 	
 	public static void check() throws Exception
 	{
-		if (prefs.node("/hueimmersive").keys().length == 0)
+		if (prefs.node("/hueimmersive").keys().length != 0)
+		{
+			ArrayList<String> keys = new ArrayList<String>(Arrays.asList(prefs.keys()));
+			String[] settingList = {
+				"ui_x", 
+				"ui_y", 
+				"cpi_x", 
+				"cpi_y", 
+				"oi_x", 
+				"oi_y", 
+				"chunks", 
+				"brightness", 
+				"saturation", 
+				"format", 
+				"colorgrid", 
+				"restorelight", 
+				"autoswitch", 
+				"gammacorrection", 
+				"screen"};
+			
+			ArrayList<String> settings = new ArrayList<String>(Arrays.asList(settingList));
+			
+			if(keys.containsAll(settings) == false)
+			{
+				setDefaultSettings();
+			}
+		}
+		else
 		{
 			setDefaultSettings();
 		}
