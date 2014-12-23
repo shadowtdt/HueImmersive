@@ -66,7 +66,7 @@ public class HColor
 	    	xy = xyDefault;
 	    }
 	    // prevent oversaturated purple
-	    else if(colorHSB[2] < 1.5f / 255f && (colorHSB[0] > 0.78 && colorHSB[0] < 0.87))
+	    else if(colorHSB[2] < 1.55f / 255f && (colorHSB[0] > 0.78 && colorHSB[0] < 0.87))
 	    {
 	    	xy = xyDefault;
 	    }

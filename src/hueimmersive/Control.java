@@ -7,9 +7,11 @@ import java.util.TimerTask;
 
 public class Control
 {
-	private Timer captureLoop;
-	private float autoOffBri = 0f;
 	public static boolean immersiveProcessIsActive = false;
+	private Timer captureLoop;
+	private int transitionTime = 5;
+	
+	private float lastAutoOffBri = 0f;
 	
 	public Control() throws Exception
 	{
@@ -39,24 +41,24 @@ public class Control
 		int bri = Math.round(Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null)[2] * 255); // brightness
 		
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + light.id + "/state";	
-		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":4}"; //\"sat\":" + Math.round(HSBcolor[1] * 255) + ", 
+		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 		
 		// turn light off automatically if the brightness is very low
 		if (Settings.getBoolean("autoswitch"))
 		{
-			if (colorHSB[2] > autoOffBri + 0.1f && light.isOn() == false)
+			if (colorHSB[2] > lastAutoOffBri + 0.1f && light.isOn() == false)
 			{
-				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":4}";
+				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 			}
 			else if (colorHSB[2] <= 0.0627451f && light.isOn() == true)
 			{
 				data = "{\"on\":false, \"transitiontime\":3}";
-				autoOffBri = colorHSB[2];
+				lastAutoOffBri = colorHSB[2];
 			}
 		}
 		else if (Settings.getBoolean("autoswitch") == false && light.isOn() == false)
 		{
-			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":2}";
+			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 		}
 			
 		HRequest.PUT(APIurl, data);
@@ -94,7 +96,7 @@ public class Control
 				}
 			}
 		};
-		captureLoop.scheduleAtFixedRate(task, 0, 300);
+		captureLoop.scheduleAtFixedRate(task, 0, Math.round(transitionTime * 100 * 0.68));
 	}
 	
 	public void stopImmersiveProcess() throws Exception
