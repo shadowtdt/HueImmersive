@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public class Control
 {
 	private Timer captureLoop;
-	private double autoOffBri = 0.0;
+	private float autoOffBri = 0f;
 	public static boolean immersiveProcessIsActive = false;
 	
 	public Control() throws Exception
@@ -31,32 +31,32 @@ public class Control
 	
 	public void setLight(HLight light, Color color) throws Exception // calculate color and send it to light
 	{		
-		float[] colorHSB1 = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified color
+		float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
 		
-		color = Color.getHSBColor(colorHSB1[0], colorHSB1[1], (float)(colorHSB1[2] * (Main.ui.slider_Brightness.getValue() / 100.0) * (Settings.Light.getBrightness(light.uniqueid) / 100.0))); // calculate brightness set by user
-		float[] colorHSB2 = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // modified color
+		color = Color.getHSBColor(colorHSB[0], colorHSB[1], (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light.uniqueid) / 100f))); // modified color
 		
-		double[] xy = HColor.translate(color, Settings.getBoolean("gammacorrection")); // converted color
+		double[] xy = HColor.translate(color, Settings.getBoolean("gammacorrection")); // xy color
+		int bri = Math.round(colorHSB[2] * 255f); // brightness
 		
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + light.id + "/state";	
-		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + Math.round(colorHSB2[2] * 255) + ", \"transitiontime\":4}"; //\"sat\":" + Math.round(HSBcolor[1] * 255) + ", 
+		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":4}"; //\"sat\":" + Math.round(HSBcolor[1] * 255) + ", 
 		
 		// turn light off automatically if the brightness is very low
 		if (Settings.getBoolean("autoswitch"))
 		{
-			if (colorHSB1[2] > autoOffBri + 0.1 && light.isOn() == false)
+			if (colorHSB[2] > autoOffBri + 0.1f && light.isOn() == false)
 			{
-				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + Math.round(colorHSB2[2] * 255) + ", \"transitiontime\":4}";
+				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":4}";
 			}
-			else if (colorHSB1[2] <= 0.0627451f && light.isOn() == true)
+			else if (colorHSB[2] <= 0.0627451f && light.isOn() == true)
 			{
 				data = "{\"on\":false, \"transitiontime\":3}";
-				autoOffBri = colorHSB1[2];
+				autoOffBri = colorHSB[2];
 			}
 		}
 		else if (Settings.getBoolean("autoswitch") == false && light.isOn() == false)
 		{
-			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + Math.round(colorHSB2[2] * 255) + ", \"transitiontime\":2}";
+			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":2}";
 		}
 			
 		HRequest.PUT(APIurl, data);

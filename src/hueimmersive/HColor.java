@@ -10,7 +10,7 @@ public class HColor
 	{	    
 	    double[] xyDefault = {0.31, 0.32}; 
 	    
-	    float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+	    float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 	    
 	    float red = ((float)color.getRed() / 255f);
 	    float green = ((float)color.getGreen() / 255f);
@@ -66,7 +66,7 @@ public class HColor
 	    	xy = xyDefault;
 	    }
 	    // prevent oversaturated purple
-	    else if(hsbColor[2] < 1.5f / 255f && (hsbColor[0] > 0.78 && hsbColor[0] < 0.87))
+	    else if(colorHSB[2] < 1.5f / 255f && (colorHSB[0] > 0.78 && colorHSB[0] < 0.87))
 	    {
 	    	xy = xyDefault;
 	    }
