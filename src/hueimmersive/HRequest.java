@@ -85,7 +85,6 @@ public class HRequest
 		try // to connect to URL
 		{
 			connection.setConnectTimeout(400);
-			connection.getInputStream();
 			connection.connect();
 			return true;
 		} 
