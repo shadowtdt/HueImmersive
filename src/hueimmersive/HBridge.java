@@ -44,7 +44,7 @@ public class HBridge
 	{
 		Debug.info(null, "try fast connect...");
 		
-		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username + "/config/");
+		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username);
 		
 		if (HRequest.responseCheck(response) == "data")
 		{
