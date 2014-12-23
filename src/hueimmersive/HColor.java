@@ -1,74 +1,80 @@
 package hueimmersive;
-
 import java.awt.Color;
 
 
 public class HColor
 {
+	// created with help from: https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3
+	
 	public static double[] translate(Color color, Boolean useGammaCorrection) // translate in CIE 1931 colorspace for hue
-	{
-		// code created with help: https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3
-
-	    double[] nColor = new double[3];
-	    float red, green, blue;
+	{	    
+	    double[] xyDefault = {0.31, 0.32}; 
 	    
-	    nColor[0] = ((float)color.getRed() / 255);
-	    nColor[1] = ((float)color.getGreen() / 255);
-	    nColor[2] = ((float)color.getBlue() / 255);
+	    float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+	    
+	    float red = ((float)color.getRed() / 255f);
+	    float green = ((float)color.getGreen() / 255f);
+	    float blue = ((float)color.getBlue() / 255f);
 	    
 	    if (useGammaCorrection)
 	    {
-		    if (nColor[0] > 0.04045) 
+		    if (red > 0.04045) 
 		    {
-		        red = (float) Math.pow((nColor[0] + 0.055) / (1.0 + 0.055), 2.4);
+		        red = (float) Math.pow((red + 0.055) / (1.0 + 0.055), 2.4);
 		    } 
 		    else 
 		    {
-		        red = (float) (nColor[0] / 12.92);
+		        red = (float) (red / 12.92);
 		    }
 
-		    if (nColor[1] > 0.04045) 
+		    if (green > 0.04045) 
 		    {
-		        green = (float) Math.pow((nColor[1] + 0.055) / (1.0 + 0.055), 2.4);
+		        green = (float) Math.pow((green + 0.055) / (1.0 + 0.055), 2.4);
 		    } 
 		    else 
 		    {
-		        green = (float) (nColor[1] / 12.92);
+		        green = (float) (green / 12.92);
 		    }
 
-		    if (nColor[2] > 0.04045) 
+		    if (blue > 0.04045) 
 		    {
-		        blue = (float) Math.pow((nColor[2] + 0.055) / (1.0 + 0.055), 2.4);
+		        blue = (float) Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4);
 		    }
 		    else
 		    {
-		        blue = (float) (nColor[2] / 12.92);
+		        blue = (float) (blue / 12.92);
 		    }
 	    }
 	    else
 	    {
-	    	red = (float) (nColor[0] / 12.92);
-	    	green = (float) (nColor[1] / 12.92);
-	    	blue = (float) (nColor[2] / 12.92);
+	    	red = (float) (red / 12.92);
+	    	green = (float) (green / 12.92);
+	    	blue = (float) (blue / 12.92);
 	    }
 	    
 	    float X = (float) (red * 0.649926 + green * 0.103455 + blue * 0.197109);
 	    float Y = (float) (red * 0.234327 + green * 0.743075 + blue * 0.022598);
 	    float Z = (float) (red * 0.0000000 + green * 0.053077 + blue * 1.035763);
 
-	    float x = X / (X + Y + Z);
-	    float y = Y / (X + Y + Z);
-
-	    // set default color if float/color is NaN
-	    if (Float.isNaN(x) || Float.isNaN(y))
-	    {
-		    x = 0.31f;
-		    y = 0.32f;
-	    }
-	    
 	    double[] xy = new double[2];
-	    xy[0] = x;
-	    xy[1] = y;
+	    xy[0] = X / (X + Y + Z);
+	    xy[1] = Y / (X + Y + Z);
+	    
+	    // set default color if float/color is NaN
+	    if (Double.isNaN(xy[0]) || Double.isNaN(xy[1]))
+	    {
+	    	xy = xyDefault;
+	    }
+	    // prevent oversaturated purple
+	    else if(hsbColor[2] < 1.5f / 255f && (hsbColor[0] > 0.78 && hsbColor[0] < 0.87))
+	    {
+	    	xy = xyDefault;
+	    	System.out.println("purple");
+	    }
+	    else
+	    {
+	    	System.out.println("-");
+	    }
 	    
 	    return xy;
 	}
