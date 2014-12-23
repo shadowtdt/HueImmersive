@@ -259,19 +259,19 @@ public class OptionInterface
 						int algorithm = list_Algorithms.locationToIndex(arg0.getPoint());
 						if (algorithm == 0)
 						{
-							list_Algorithms.setToolTipText("saturated color");
+							list_Algorithms.setToolTipText("average color");
 						}
 						else if (algorithm == 1)
 						{
-							list_Algorithms.setToolTipText("bright color");
+							list_Algorithms.setToolTipText("saturated color");
 						}
 						else if (algorithm == 2)
 						{
-							list_Algorithms.setToolTipText("dark color");
+							list_Algorithms.setToolTipText("bright color");
 						}
 						else if (algorithm == 3)
 						{
-							list_Algorithms.setToolTipText("average color");
+							list_Algorithms.setToolTipText("dark color");
 						}
 					}
 				});
