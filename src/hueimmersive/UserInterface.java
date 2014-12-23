@@ -144,7 +144,7 @@ public class UserInterface
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setResizable(false);
 		frame.setTitle("Hue Immersive");
-		frame.setBounds(100, 100, 240, 270);
+		frame.setBounds(100, 100, 243, 260);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation(Settings.getInteger("ui_x"), Settings.getInteger("ui_y"));
 		frame.addWindowListener(new WindowAdapter() {
