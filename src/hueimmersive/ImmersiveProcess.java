@@ -283,10 +283,10 @@ public class ImmersiveProcess
 		}
 
 		Color[] extrColor = new Color[algorithms];
-		extrColor[0] = Color.getHSBColor(sat_color[0], sat_color[1], sat_color[2]);
-		extrColor[1] = Color.getHSBColor(bri_color[0], bri_color[1], bri_color[2]);
-		extrColor[2] = Color.getHSBColor(dar_color[0], dar_color[1], dar_color[2]);
-		extrColor[3] = Color.getHSBColor(avg_color[0], avg_color[1], avg_color[2]);
+		extrColor[0] = Color.getHSBColor(avg_color[0], avg_color[1], avg_color[2]);
+		extrColor[1] = Color.getHSBColor(sat_color[0], sat_color[1], sat_color[2]);
+		extrColor[2] = Color.getHSBColor(bri_color[0], bri_color[1], bri_color[2]);
+		extrColor[3] = Color.getHSBColor(dar_color[0], dar_color[1], dar_color[2]);
 		
 		setLightColor(extrColor);
 	}
@@ -295,13 +295,12 @@ public class ImmersiveProcess
 	{
 		for (HLight light : HBridge.lights)
 		{
-			int id = light.id;
-			boolean active = Settings.Light.getActive(id);
-			int alg = Settings.Light.getAlgorithm(id);
+			boolean active = Settings.Light.getActive(light);
+			int alg = Settings.Light.getAlgorithm(light);
 			
-			if(active == true)
+			if(active)
 			{
-				Main.hueControl.setLight(id, extrColor[alg]);
+				Main.hueControl.setLight(light, extrColor[alg]);
 			}
 		}
 	}

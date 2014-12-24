@@ -1,3 +1,19 @@
+## v0.5 (24 Dec 2014) ##
+ - add saturation slider
+ - add new start parameters: force-on, force-off, force-start
+ - add start parameters to option interface
+ - tweaked some transition values
+ - reordered color algorithms
+ - light options are now saved with unique id
+ - fixed on/off button bug
+ - fixed problem with multiple startup parameters
+ - fixed debug formation
+ - fixed/prevent purple oversaturation
+ - fixed connection if bridge ip changed
+ - fixed problem at second start with unauthorized user
+ - fixed default settings setup
+ - code improvements
+
 ## v0.4.4.1 (24 Nov 2014) ##
  - fixed problem with different reply amounts depending on the firmware release
 

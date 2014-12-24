@@ -7,6 +7,7 @@ public class HLight
 {
 	public final int id;
 	public final String name;
+	public final String uniqueid;
 	private int[] storedLightColor = new int[3];
 	
 	public HLight(int LightID) throws Exception
@@ -15,8 +16,9 @@ public class HLight
 		
 		JsonObject response = HRequest.GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
 		name = response.get("name").getAsString();
+		uniqueid = response.get("uniqueid").getAsString();
 		
-		Settings.Light.checkSettings(id);
+		Settings.Light.check(this);
 	}
 	
 	public boolean isOn() throws Exception
@@ -54,7 +56,7 @@ public class HLight
 	public void restoreLightColor() throws Exception
 	{
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
-		String data = "{\"hue\":" + storedLightColor[0] + ", \"sat\":" + storedLightColor[1] + ", \"bri\":" + storedLightColor[2] + ", \"transitiontime\":4}";
+		String data = "{\"hue\":" + storedLightColor[0] + ", \"sat\":" + storedLightColor[1] + ", \"bri\":" + storedLightColor[2] + ", \"transitiontime\":1}";
 		
 		HRequest.PUT(APIurl, data);
 	}

@@ -3,6 +3,8 @@ package hueimmersive;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Main
@@ -10,28 +12,33 @@ public class Main
 	public static UserInterface ui;
 	public static Control hueControl;
 	
-	public static final String version = "0.4.4.1";
-	public static final int build = 17;
+	public static final String version = "0.5";
+	public static final int build = 18;
 	
 	public static boolean updateAvailable;
 	
+	public static ArrayList<String> arguments = new ArrayList<String>();
+	
 	public static void main(String[] args) throws Exception
-	{		
-		for (String arg : args) // check program arguments
+	{
+		arguments.addAll(Arrays.asList(args));
+		arguments.addAll(Settings.getArguments());
+		
+		// check program arguments
+		if(arguments.contains("debug"))
 		{
-			if (arg.equals("debug"))
-			{
-				Debug.activateDebugging();
-			}
-			else if(arg.equals("log"))
-			{
-				Debug.activateLogging();
-			}
-			else if (arg.equals("reset"))
-			{
-				Settings.reset(true);
-			}
+			Debug.activateDebugging();
 		}
+		if(arguments.contains("log"))
+		{
+			Debug.activateLogging();
+		}
+		if (arguments.contains("reset"))
+		{
+			Settings.reset(true);
+		}
+		
+		Debug.info("program arguments", (Object[])arguments.toArray());
 		
 		Debug.info("program parameters",
 				"version: " + version,
@@ -39,11 +46,14 @@ public class Main
 				"os: " + System.getProperty("os.name"),
 				"java version: " + System.getProperty("java.version"));
 		
+		Settings.check();
+		Settings.debug();
+		Settings.Bridge.debug();
+		Settings.Light.debug();
+		
 		Debug.info(null, "hue immersive started");
 		
 		checkForUpdate();
-		
-		Settings.debug();
 		
 		ui = new UserInterface();
 		hueControl = new Control();

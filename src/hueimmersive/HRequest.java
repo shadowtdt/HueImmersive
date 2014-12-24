@@ -85,6 +85,7 @@ public class HRequest
 		try // to connect to URL
 		{
 			connection.setConnectTimeout(400);
+			connection.connect();
 			return true;
 		} 
 		catch (Exception e)

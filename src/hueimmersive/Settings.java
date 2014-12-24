@@ -7,28 +7,44 @@ import java.util.prefs.Preferences;
 
 public class Settings
 {
-	private static Preferences prefs = Preferences.userRoot();
+	private static Preferences prefs = Preferences.userRoot().node("/hueimmersive");
 	
 	public static SettingsLight Light = new SettingsLight();
 	public static SettingsBridge Bridge = new SettingsBridge();
 	
-	static // independent setup
+	public static void check() throws Exception
 	{
-		try
+		if (prefs.node("/hueimmersive").keys().length != 0)
 		{
-			if (prefs.node("/hueimmersive").keys().length != 0)
+			ArrayList<String> keys = new ArrayList<String>(Arrays.asList(prefs.keys()));
+			String[] settingList = {
+				"ui_x", 
+				"ui_y", 
+				"cpi_x", 
+				"cpi_y", 
+				"oi_x", 
+				"oi_y", 
+				"chunks", 
+				"brightness", 
+				"saturation", 
+				"format", 
+				"colorgrid", 
+				"restorelight", 
+				"autoswitch", 
+				"gammacorrection", 
+				"screen"};
+			
+			ArrayList<String> settings = new ArrayList<String>(Arrays.asList(settingList));
+			
+			if(keys.containsAll(settings) == false)
 			{
-				prefs = Preferences.userRoot().node("/hueimmersive");
-			}
-			else
-			{
-				prefs = Preferences.userRoot().node("/hueimmersive");
+				Debug.info(null, "some settings are missing");
 				setDefaultSettings();
 			}
 		}
-		catch(Exception e)
+		else
 		{
-			Debug.exception(e);
+			setDefaultSettings();
 		}
 	}
 	
@@ -36,7 +52,6 @@ public class Settings
 	{
 		String[] keys;
 		ArrayList<String> settings;
-		
 		keys = prefs.keys();
 		Arrays.sort(keys);
 		settings = new ArrayList<String>();
@@ -45,18 +60,6 @@ public class Settings
 			settings.add(s + " = " + prefs.get(s, null));
 		}
 		Debug.info("settings general", settings);
-		
-		for (String node : prefs.childrenNames())
-		{			
-			keys = prefs.node(node).keys();
-			Arrays.sort(keys);
-			settings = new ArrayList<String>();
-			for (String s : keys)
-			{
-				settings.add(s + " = " + prefs.node(node).get(s, null));
-			}
-			Debug.info("settings " + node, settings);
-		}
 	}
 	
 	public static void setDefaultSettings()
@@ -71,6 +74,7 @@ public class Settings
 		prefs.putInt("oi_y", 450);
 		prefs.putInt("chunks", 12);
 		prefs.putInt("brightness", 100);
+		prefs.putInt("saturation", 110);
 		prefs.putInt("format", 0);
 		prefs.putBoolean("colorgrid", false);
 		prefs.putBoolean("restorelight", true);
@@ -87,6 +91,37 @@ public class Settings
 		{
 			Debug.closeLog();
 			System.exit(0);
+		}
+	}
+	
+	public static ArrayList<String> getArguments()
+	{
+		String args = prefs.get("arguments", null);
+		
+		ArrayList<String> arrArgs = new ArrayList<String>();
+		if (args != null)
+		{
+			arrArgs.addAll(Arrays.asList(args.split(",")));
+		}
+		
+		return arrArgs;
+	}
+	
+	public static void setArguments(ArrayList<String> args)
+	{
+		if (args.size() != 0)
+		{
+			String arguments = "";
+			for (String arg : args)
+			{
+				arguments += "," + arg;
+			}
+			arguments = arguments.replaceFirst(",", "");
+			prefs.put("arguments", arguments);
+		}
+		else
+		{
+			prefs.remove("arguments");
 		}
 	}
 	
@@ -111,7 +146,19 @@ public class Settings
 
 class SettingsBridge // bridge settings
 {
-	public Preferences prefs = Preferences.userRoot().node("/hueimmersive/bridge");
+	private Preferences prefs = Preferences.userRoot().node("/hueimmersive/bridge");
+	
+	public void debug() throws Exception
+	{
+		String[] keys = prefs.keys();
+		Arrays.sort(keys);
+		ArrayList<String> settings = new ArrayList<String>();
+		for (String k : keys)
+		{
+			settings.add(k + " = " + prefs.get(k, null));
+		}
+		Debug.info("settings bridge", settings);
+	}
 	
 	public void setInternalipaddress(String internalipaddress)
 	{
@@ -126,24 +173,25 @@ class SettingsBridge // bridge settings
 
 class SettingsLight // light settings
 {
-	public Preferences prefs = Preferences.userRoot().node("/hueimmersive/lights");
+	private Preferences prefs = Preferences.userRoot().node("/hueimmersive/lights");
 	
 	private int nexAlg = 0;
 	private int maxAlg = ImmersiveProcess.algorithms;
 	
-	public void checkSettings(int LightID) throws Exception // setup default light settings if it doesn't have
+	public void check(HLight light) throws Exception // setup default light settings if it doesn't have
 	{
-		if (prefs.get(LightID + " active", null) == null)
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		if (lprefs.get("active", null) == null)
 		{
-			setActive(LightID, true);
+			lprefs.putBoolean("active", true);
 		}
-		if (prefs.get(LightID + " bri", null) == null)
+		if (lprefs.get("bri", null) == null)
 		{
-			setBrightness(LightID, 100);
+			lprefs.putInt("bri", 100);
 		}
-		if (prefs.get(LightID + " alg", null) == null)
+		if (lprefs.get("alg", null) == null)
 		{
-			setAlgorithm(LightID, nexAlg);
+			lprefs.putInt("alg", nexAlg);
 			nexAlg++;
 			if (nexAlg > maxAlg)
 			{
@@ -152,29 +200,51 @@ class SettingsLight // light settings
 		}
 	}
 	
-	public void setBrightness(int LightID, int bri)
+	public void debug() throws Exception
 	{
-		prefs.putInt(LightID + " bri", bri);
-	}
-	public void setActive(int LightID, boolean active)
-	{
-		prefs.putBoolean(LightID + " active", active);
-	}
-	public void setAlgorithm(int LightID, int alg)
-	{
-		prefs.putInt(LightID + " alg", alg);
+		ArrayList<String> settings = new ArrayList<String>();
+		for (String node : prefs.childrenNames())
+		{	
+			settings.add(node + "");
+			String[] keys = prefs.node(node).keys();
+			Arrays.sort(keys);
+			for (String s : keys)
+			{
+				settings.add("  " + s + " = " + prefs.node(node).get(s, null));
+			}
+		}
+		Debug.info("settings lights", settings);
 	}
 	
-	public boolean getActive(int LightID)
+	public void setBrightness(HLight light, int bri)
 	{
-		return prefs.getBoolean(LightID + " active", true);
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		lprefs.putInt("bri", bri);
 	}
-	public int getAlgorithm(int LightID)
+	public void setActive(HLight light, boolean active)
 	{
-		return prefs.getInt(LightID + " alg", -1);
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		lprefs.putBoolean("active", active);
 	}
-	public int getBrightness(int LightID)
+	public void setAlgorithm(HLight light, int alg)
 	{
-		return prefs.getInt(LightID + " bri", -1);
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		lprefs.putInt("alg", alg);
+	}
+	
+	public boolean getActive(HLight light)
+	{
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		return lprefs.getBoolean("active", true);
+	}
+	public int getAlgorithm(HLight light)
+	{
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		return lprefs.getInt("alg", -1);
+	}
+	public int getBrightness(HLight light)
+	{
+		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+		return lprefs.getInt("bri", -1);
 	}
 }
