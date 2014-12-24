@@ -38,6 +38,7 @@ public class Settings
 			
 			if(keys.containsAll(settings) == false)
 			{
+				Debug.info(null, "some settings are missing");
 				setDefaultSettings();
 			}
 		}
