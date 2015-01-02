@@ -22,6 +22,8 @@ public class Main
 	public static void main(String[] args) throws Exception
 	{
 		arguments.addAll(Arrays.asList(args));
+		
+		Settings.checkArguments();
 		arguments.addAll(Settings.getArguments());
 		
 		// check program arguments
@@ -38,13 +40,12 @@ public class Main
 			Settings.reset(true);
 		}
 		
-		Debug.info("program arguments", (Object[])arguments.toArray());
-		
 		Debug.info("program parameters",
 				"version: " + version,
 				"build: " + build,
 				"os: " + System.getProperty("os.name"),
 				"java version: " + System.getProperty("java.version"));
+		Debug.info("program arguments", (Object[])arguments.toArray());
 		
 		Settings.check();
 		Settings.debug();

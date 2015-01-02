@@ -25,7 +25,7 @@ public class Control
 		{
 			turnAllLightsOff();
 		}
-		if (Main.arguments.contains("force-start"))
+		if (Main.arguments.contains("force-start") && !Main.arguments.contains("force-off"))
 		{
 			startImmersiveProcess();
 		}

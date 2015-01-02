@@ -34,13 +34,13 @@ public class Settings
 				"gammacorrection", 
 				"screen"};
 			
-			ArrayList<String> settings = new ArrayList<String>(Arrays.asList(settingList));
-			
-			if(keys.containsAll(settings) == false)
+			if(keys.containsAll(Arrays.asList(settingList)) == false)
 			{
 				Debug.info(null, "some settings are missing");
 				setDefaultSettings();
 			}
+			
+			checkArguments();
 		}
 		else
 		{
@@ -123,6 +123,34 @@ public class Settings
 		{
 			prefs.remove("arguments");
 		}
+	}
+	
+	public static void checkArguments()
+	{
+		ArrayList<String> arguments = getArguments();
+		for (String arg : getArguments())
+		{
+			if (arguments.contains(arg))
+			{
+				switch (arg)
+				{
+					case "force-on":
+						arguments.remove("force-off");
+						break;
+					case "force-off":
+						arguments.remove("force-on");
+						arguments.remove("force-start");
+						break;
+					case "force-start":
+						arguments.remove("force-off");
+						break;
+					case "log":
+						break;
+				}
+			}
+		}
+		
+		setArguments(arguments);
 	}
 	
 	public static int getInteger(String key)

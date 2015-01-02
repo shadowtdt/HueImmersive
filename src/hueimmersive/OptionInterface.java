@@ -151,18 +151,38 @@ public class OptionInterface
 		frame.getContentPane().add(label_StartupOptions, "2, 10, 1, 3, center, center");
 		
 		checkbox_ForceOn = new JCheckBox("   force on");
+		checkbox_ForceOn.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceOn.setToolTipText("turn lights on at startup");
 		frame.getContentPane().add(checkbox_ForceOn, "3, 10, left, center");
 		
 		checkbox_ForceStart = new JCheckBox("   force start");
+		checkbox_ForceStart.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceStart.setToolTipText("start the immersive lighting at startup");
 		frame.getContentPane().add(checkbox_ForceStart, "4, 10, left, center");
 		
 		checkbox_ForceOff = new JCheckBox("   force off");
+		checkbox_ForceOff.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceOff.setToolTipText("turn lights off at startup");
 		frame.getContentPane().add(checkbox_ForceOff, "3, 12, left, center");
 		
 		checkbox_Log = new JCheckBox("   log");
+		checkbox_Log.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_Log.setToolTipText("create a log");
 		frame.getContentPane().add(checkbox_Log, "4, 12, left, center");
 		
@@ -363,18 +383,32 @@ public class OptionInterface
 			{
 				case "force-on":
 					checkbox_ForceOn.setSelected(true);
+					checkbox_ForceOff.setSelected(false);
 					break;
 				case "force-off":
 					checkbox_ForceOff.setSelected(true);
+					checkbox_ForceOn.setSelected(false);
+					checkbox_ForceStart.setSelected(false);
 					break;
 				case "force-start":
 					checkbox_ForceStart.setSelected(true);
+					checkbox_ForceOff.setSelected(false);
 					break;
 				case "log":
 					checkbox_Log.setSelected(true);
 					break;
 			}
 		}
+		
+		updateSelectedArguments();
+	}
+	
+	private void updateSelectedArguments()
+	{
+		checkbox_ForceOn.setEnabled(!checkbox_ForceOff.isSelected());
+		checkbox_ForceOff.setEnabled(!checkbox_ForceOn.isSelected() && !checkbox_ForceStart.isSelected());
+		checkbox_ForceStart.setEnabled(!checkbox_ForceOff.isSelected());
+		checkbox_Log.setEnabled(true);
 	}
 	
 	private void saveOptions() // save all settings
