@@ -31,7 +31,7 @@ public class HLight
 	public void turnOn() throws Exception
 	{
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
-		String data = "{\"on\": true, \"transitiontime\":4}";
+		String data = "{\"on\": true}";
 		
 		HRequest.PUT(APIurl, data);
 	}
@@ -39,7 +39,7 @@ public class HLight
 	public void turnOff() throws Exception
 	{
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
-		String data = "{\"on\": false, \"transitiontime\":4}";
+		String data = "{\"on\": false}";
 		
 		HRequest.PUT(APIurl, data);
 	}
