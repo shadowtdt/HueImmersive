@@ -11,7 +11,7 @@ public class Control
 	private Timer captureLoop;
 	private int transitionTime = 5;
 	
-	private float lastAutoOffBri = 0f;
+	private double lastAutoOffBri;
 	
 	public Control() throws Exception
 	{
@@ -34,33 +34,34 @@ public class Control
 	public void setLight(HLight light, Color color) throws Exception // calculate color and send it to light
 	{		
 		float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
+		Color lightColor = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
 		
-		color = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
-		
-		double[] xy = HColor.translate(color, Settings.getBoolean("gammacorrection")); // xy color
-		int bri = Math.round(Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null)[2] * 255); // brightness
+		double[] xy = HColor.translate(lightColor, Settings.getBoolean("gammacorrection")); // xy color
+		int bri = Math.round(Color.RGBtoHSB(lightColor.getRed(), lightColor.getGreen(), lightColor.getBlue(), null)[2] * 255); // brightness
 		
 		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + light.id + "/state";	
 		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 		
 		// turn light off automatically if the brightness is very low
+		double turnOffThreshold = 0.09; // fake slider
 		if (Settings.getBoolean("autoswitch"))
 		{
-			if (colorHSB[2] > lastAutoOffBri + 0.1f && light.isOn() == false)
+			if (colorHSB[2] > Math.max(lastAutoOffBri * 1.25, turnOffThreshold * 1.02) && !light.isOn())
 			{
-				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
+				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 			}
-			else if (colorHSB[2] <= 0.0627451f && light.isOn() == true)
+			else if (colorHSB[2] < turnOffThreshold && light.isOn())
 			{
-				data = "{\"on\":false, \"transitiontime\":3}";
+				data = "{\"on\":false, \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 				lastAutoOffBri = colorHSB[2];
+				Debug.info(null, Math.max(lastAutoOffBri * 1.25, turnOffThreshold * 1.02));
 			}
 		}
-		else if (Settings.getBoolean("autoswitch") == false && light.isOn() == false)
+		else if (!Settings.getBoolean("autoswitch") && !light.isOn())
 		{
-			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
+			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 		}
-			
+		
 		HRequest.PUT(APIurl, data);
 	}
 	
@@ -73,7 +74,7 @@ public class Control
 		Main.ui.button_Start.setEnabled(false);
 		Main.ui.button_Once.setEnabled(false);
 		
-		immersiveProcessIsActive = true;
+		lastAutoOffBri = 0.0;
 		
 		for(HLight light : HBridge.lights)
 		{
@@ -96,6 +97,8 @@ public class Control
 				}
 			}
 		};
+		
+		immersiveProcessIsActive = true;
 		captureLoop.scheduleAtFixedRate(task, 0, Math.round(transitionTime * 100 * 0.68));
 	}
 	

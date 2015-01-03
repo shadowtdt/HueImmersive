@@ -112,7 +112,7 @@ public class OptionInterface
 		label_LightOptions.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		frame.getContentPane().add(label_LightOptions, "2, 2, 1, 3, center, default");
 		
-		checkbox_AutoTurnOff = new JCheckBox("   auto. turn off lights (experimental v2)");
+		checkbox_AutoTurnOff = new JCheckBox("   auto. turn off lights (experimental v3)");
 		checkbox_AutoTurnOff.setToolTipText("turns the lights automatically off when the screen is near black");
 		frame.getContentPane().add(checkbox_AutoTurnOff, "3, 2, 2, 1, left, center");
 		
