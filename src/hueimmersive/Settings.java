@@ -31,6 +31,7 @@ public class Settings
 				"colorgrid", 
 				"restorelight", 
 				"autoswitch", 
+				"autoswitchthreshold", 
 				"gammacorrection", 
 				"screen"};
 			
@@ -79,6 +80,7 @@ public class Settings
 		prefs.putBoolean("colorgrid", false);
 		prefs.putBoolean("restorelight", true);
 		prefs.putBoolean("autoswitch", false);
+		prefs.putInt("autoswitchthreshold", 10);
 		prefs.putBoolean("gammacorrection", true);
 		prefs.putInt("screen", 0);
 	}

@@ -11,7 +11,7 @@ public class Control
 	private Timer captureLoop;
 	private int transitionTime = 5;
 	
-	private double lastAutoOffBri;
+	private double lastAutoSwitchBri;
 	
 	public Control() throws Exception
 	{
@@ -43,18 +43,17 @@ public class Control
 		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 		
 		// turn light off automatically if the brightness is very low
-		double turnOffThreshold = 0.09; // fake slider
+		double autoSwitchThreshold = Settings.getInteger("autoswitchthreshold") / 100.0;
 		if (Settings.getBoolean("autoswitch"))
 		{
-			if (colorHSB[2] > Math.max(lastAutoOffBri * 1.25, turnOffThreshold * 1.02) && !light.isOn())
+			if (colorHSB[2] > Math.max((lastAutoSwitchBri + autoSwitchThreshold) * 1.25, autoSwitchThreshold * 1.02) && !light.isOn())
 			{
 				data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 			}
-			else if (colorHSB[2] < turnOffThreshold && light.isOn())
+			else if (colorHSB[2] < autoSwitchThreshold && light.isOn())
 			{
 				data = "{\"on\":false, \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
-				lastAutoOffBri = colorHSB[2];
-				Debug.info(null, Math.max(lastAutoOffBri * 1.25, turnOffThreshold * 1.02));
+				lastAutoSwitchBri = colorHSB[2] - autoSwitchThreshold;
 			}
 		}
 		else if (!Settings.getBoolean("autoswitch") && !light.isOn())
@@ -74,7 +73,7 @@ public class Control
 		Main.ui.button_Start.setEnabled(false);
 		Main.ui.button_Once.setEnabled(false);
 		
-		lastAutoOffBri = 0.0;
+		lastAutoSwitchBri = 0.0;
 		
 		for(HLight light : HBridge.lights)
 		{
