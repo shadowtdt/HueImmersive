@@ -184,19 +184,19 @@ public class UserInterface
 				labelConnect.setIcon(null);
 				break;
 			case 1:  //search and connect
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_connect.gif")));
+				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/resources/hue_connect.gif")));
 				Thread.sleep(1500);
 				break;
 			case 2:  // successfully connected
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_connected.png")));
+				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/resources/hue_connected.png")));
 				Thread.sleep(500);
 				loadMainInterface();
 				break;
 			case 3:  // press link button
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_presslinkbutton.gif")));
+				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/resources/hue_presslinkbutton.gif")));
 				break;
 			case 4:  // timeout
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_timeout.png")));
+				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/resources/hue_timeout.png")));
 				break;
 		}
 	}
