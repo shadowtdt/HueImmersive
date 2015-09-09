@@ -6,7 +6,7 @@ import javax.swing.JCheckBox;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import java.awt.event.WindowAdapter;
@@ -90,17 +90,17 @@ public class OptionInterface
 		
 		frame.setLocation(Settings.getInteger("oi_x"), Settings.getInteger("oi_y"));
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("left:20dlu:grow"),
 				ColumnSpec.decode("left:20dlu:grow"),
 				ColumnSpec.decode("left:20dlu:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,},
+				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("16dlu:grow"),
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("16dlu"),
@@ -108,11 +108,11 @@ public class OptionInterface
 				RowSpec.decode("162dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("16dlu"),
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("bottom:16dlu"),
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		JLabel label_LightOptions = new JLabel("light options:");
 		label_LightOptions.setEnabled(false);
