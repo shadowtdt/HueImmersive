@@ -2,7 +2,7 @@ package hueimmersive;
 import java.awt.Color;
 
 
-public class HColor
+public class HueColor
 {
 	// created with help from: https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3
 	

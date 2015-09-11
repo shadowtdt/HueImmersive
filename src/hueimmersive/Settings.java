@@ -208,7 +208,7 @@ class SettingsLight // light settings
 	private int nexAlg = 0;
 	private int maxAlg = ImmersiveProcess.algorithms;
 	
-	public void check(HLight light) throws Exception // setup default light settings if it doesn't have
+	public void check(HueLight light) throws Exception // setup default light settings if it doesn't have
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		if (lprefs.get("active", null) == null)
@@ -246,33 +246,33 @@ class SettingsLight // light settings
 		Debug.info("settings lights", settings);
 	}
 	
-	public void setBrightness(HLight light, int bri)
+	public void setBrightness(HueLight light, int bri)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		lprefs.putInt("bri", bri);
 	}
-	public void setActive(HLight light, boolean active)
+	public void setActive(HueLight light, boolean active)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		lprefs.putBoolean("active", active);
 	}
-	public void setAlgorithm(HLight light, int alg)
+	public void setAlgorithm(HueLight light, int alg)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		lprefs.putInt("alg", alg);
 	}
 	
-	public boolean getActive(HLight light)
+	public boolean getActive(HueLight light)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		return lprefs.getBoolean("active", true);
 	}
-	public int getAlgorithm(HLight light)
+	public int getAlgorithm(HueLight light)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		return lprefs.getInt("alg", -1);
 	}
-	public int getBrightness(HLight light)
+	public int getBrightness(HueLight light)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		return lprefs.getInt("bri", -1);

@@ -35,12 +35,12 @@ public class Control
 		}
 	}
 	
-	public void setLight(HLight light, Color color) throws Exception // calculate color and send it to light
+	public void setLight(HueLight light, Color color) throws Exception // calculate color and send it to light
 	{		
 		float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
 		Color lightColor = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
 		
-		double[] xy = HColor.translate(lightColor, Settings.getBoolean("gammacorrection")); // xy color
+		double[] xy = HueColor.translate(lightColor, Settings.getBoolean("gammacorrection")); // xy color
 		int bri = Math.round(Color.RGBtoHSB(lightColor.getRed(), lightColor.getGreen(), lightColor.getBlue(), null)[2] * 255); // brightness
 		
 		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + light.id + "/state";
@@ -65,7 +65,7 @@ public class Control
 			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 		}
 		
-		HRequest.PUT(APIurl, data);
+		Request.PUT(APIurl, data);
 	}
 	
 	public void startImmersiveProcess() throws Exception
@@ -79,7 +79,7 @@ public class Control
 		
 		lastAutoSwitchBri = 0.0;
 		
-		for(HLight light : HueBridge.lights)
+		for(HueLight light : HueBridge.lights)
 		{
 			light.storeLightColor();
 		}
@@ -124,7 +124,7 @@ public class Control
 		if (Settings.getBoolean("restorelight"))
 		{
 			Thread.sleep(750);
-			for(HLight light : HueBridge.lights)
+			for(HueLight light : HueBridge.lights)
 			{
 				light.restoreLightColor();
 			}
@@ -142,7 +142,7 @@ public class Control
 	
 	public void turnAllLightsOn() throws Exception
 	{
-		for(HLight light : HueBridge.lights)
+		for(HueLight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{
@@ -154,7 +154,7 @@ public class Control
 
 	public void turnAllLightsOff() throws Exception
 	{
-		for(HLight light : HueBridge.lights)
+		for(HueLight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{

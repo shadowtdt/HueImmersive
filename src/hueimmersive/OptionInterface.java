@@ -294,7 +294,7 @@ public class OptionInterface
 			scrollpane.setColumnHeaderView(lblActiveNameColor);
 			
 			// create the list
-			for (final HLight light : HueBridge.lights)
+			for (final HueLight light : HueBridge.lights)
 			{
 				final JPanel panel_options = new JPanel();
 				panel_Lights.add(panel_options, HueBridge.lights.indexOf(light));
@@ -472,7 +472,7 @@ public class OptionInterface
 		
 		Settings.set("screen", checkbox_Screen.getSelectedIndex());
 		
-		for (HLight light : HueBridge.lights)
+		for (HueLight light : HueBridge.lights)
 		{
 			JPanel panel_Light = (JPanel) panel_Lights.getComponent(HueBridge.lights.indexOf(light));
 			

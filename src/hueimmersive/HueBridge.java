@@ -16,7 +16,7 @@ public class HueBridge implements IBridge
 	public static final String username = "hueimmersiveuser";
 	public static final String devicetype = "hueimmersive";
 	
-	public static ArrayList<HLight> lights = new ArrayList<HLight>();
+	public static ArrayList<HueLight> lights = new ArrayList<HueLight>();
 	
 	public HueBridge() throws Exception
 	{
@@ -30,9 +30,9 @@ public class HueBridge implements IBridge
 		}
 	}
 	
-	public HLight getLight(int lightID)
+	public HueLight getLight(int lightID)
 	{
-		for (HLight light : lights)
+		for (HueLight light : lights)
 		{
 			if(light.id == lightID)
 			{
@@ -57,8 +57,8 @@ public class HueBridge implements IBridge
 				try // to register a new bridge user (user must press the link button)
 				{
 					tries++;
-					JsonObject response = HRequest.POST("http://" + internalipaddress + "/api/", body);
-					if (HRequest.responseCheck(response) == "success")
+					JsonObject response = Request.POST("http://" + internalipaddress + "/api/", body);
+					if (Request.responseCheck(response) == "success")
 					{
 						timer.cancel();
 						timer.purge();
@@ -84,8 +84,8 @@ public class HueBridge implements IBridge
 
 	public void login() throws Exception // try to login
 	{
-		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username);
-		if (HRequest.responseCheck(response) == "data")
+		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
+		if (Request.responseCheck(response) == "data")
 		{
 			Debug.info(null, "login successfull");
 			
@@ -95,7 +95,7 @@ public class HueBridge implements IBridge
 			
 			Main.ui.setConnectState(2);
 		}
-		else if (HRequest.responseCheck(response) == "error")
+		else if (Request.responseCheck(response) == "error")
 		{
 			register();
 		}
@@ -116,7 +116,7 @@ public class HueBridge implements IBridge
 			{
 				try // to get the bridge ip
 				{
-					JsonObject response = HRequest.GET("https://www.meethue.com/api/nupnp");
+					JsonObject response = Request.GET("https://www.meethue.com/api/nupnp");
 
 					if (response != null)
 					{
@@ -162,9 +162,9 @@ public class HueBridge implements IBridge
 	{
 		Debug.info(null, "try fast connect...");
 
-		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username);
+		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
 
-		if (HRequest.responseCheck(response) == "data")
+		if (Request.responseCheck(response) == "data")
 		{
 			Debug.info(null, "fast connect successfull");
 
@@ -183,7 +183,7 @@ public class HueBridge implements IBridge
 
 	public void debug() throws Exception
 	{
-		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username + "/config/");
+		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username + "/config/");
 		
 		Debug.info("bridge infos", 
 				"name: " + response.get("name").getAsString(), 
@@ -196,7 +196,7 @@ public class HueBridge implements IBridge
 	public void findLights() throws Exception
 	{
 		Debug.info(null, "get lights...");
-		JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username + "/lights/");
+		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username + "/lights/");
 		
 		for (int i = 1; i < 50; i++)
 		{
@@ -205,7 +205,7 @@ public class HueBridge implements IBridge
 				JsonObject state = response.getAsJsonObject(String.valueOf(i)).getAsJsonObject("state");
 				if (state.has("on") && state.has("hue") && state.has("sat") && state.has("bri"))
 				{
-					lights.add(new HLight(i));
+					lights.add(new HueLight(i));
 				}
 			}
 		}

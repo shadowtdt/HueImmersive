@@ -293,7 +293,7 @@ public class ImmersiveProcess
 	
 	private static void setLightColor(Color[] extrColor) throws Exception // distribute the colors to the lights
 	{
-		for (HLight light : HueBridge.lights)
+		for (HueLight light : HueBridge.lights)
 		{
 			boolean active = Settings.Light.getActive(light);
 			int alg = Settings.Light.getAlgorithm(light);
