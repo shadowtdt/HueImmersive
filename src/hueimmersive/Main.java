@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class Main
 {	
-	public static UserInterface ui;
+	public static MainInterface ui;
 	public static Control hueControl;
 	
 	public static final String version = "0.5.1";
@@ -56,7 +56,7 @@ public class Main
 		
 		checkForUpdate();
 		
-		ui = new UserInterface();
+		ui = new MainInterface();
 		hueControl = new Control();
 	}
 	
