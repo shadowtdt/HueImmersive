@@ -39,7 +39,7 @@ public class Main
 		{
 			Settings.reset(true);
 		}
-		
+		Debug.activateLogging();
 		Debug.info("program parameters",
 				"version: " + version,
 				"build: " + build,

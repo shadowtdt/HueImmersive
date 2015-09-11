@@ -14,7 +14,7 @@ public class HLight
 	{
 		id = LightID;
 		
-		JsonObject response = HRequest.GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+		JsonObject response = HRequest.GET("http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id);
 		name = response.get("name").getAsString();
 		uniqueid = response.get("uniqueid").getAsString();
 		
@@ -23,14 +23,14 @@ public class HLight
 	
 	public boolean isOn() throws Exception
 	{
-		JsonObject response = HRequest.GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+		JsonObject response = HRequest.GET("http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id);
 		
 		return response.get("state").getAsJsonObject().get("on").getAsBoolean();
 	}
 	
 	public void turnOn() throws Exception
 	{
-		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
+		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id + "/state/";
 		String data = "{\"on\": true}";
 		
 		HRequest.PUT(APIurl, data);
@@ -38,7 +38,7 @@ public class HLight
 	
 	public void turnOff() throws Exception
 	{
-		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
+		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id + "/state/";
 		String data = "{\"on\": false}";
 		
 		HRequest.PUT(APIurl, data);
@@ -46,7 +46,7 @@ public class HLight
 	
 	public void storeLightColor() throws Exception
 	{
-		JsonObject response = HRequest.GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+		JsonObject response = HRequest.GET("http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id);
 
 		storedLightColor[0] = response.get("state").getAsJsonObject().get("hue").getAsInt();
 		storedLightColor[1] = response.get("state").getAsJsonObject().get("sat").getAsInt();
@@ -55,7 +55,7 @@ public class HLight
 	
 	public void restoreLightColor() throws Exception
 	{
-		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id + "/state/";
+		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + id + "/state/";
 		String data = "{\"hue\":" + storedLightColor[0] + ", \"sat\":" + storedLightColor[1] + ", \"bri\":" + storedLightColor[2] + ", \"transitiontime\":1}";
 		
 		HRequest.PUT(APIurl, data);

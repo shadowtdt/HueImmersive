@@ -642,7 +642,7 @@ public class UserInterface
 			boolean lightOn = false;
 			boolean lightOff = false;
 			
-			for(HLight light : HBridge.lights)
+			for(HLight light : HueBridge.lights)
 			{
 				if (light.isOn() && Settings.Light.getActive(light))
 				{

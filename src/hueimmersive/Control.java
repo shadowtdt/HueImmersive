@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.IBridge;
+
 import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,11 +14,13 @@ public class Control
 	private int transitionTime = 5;
 	
 	private double lastAutoSwitchBri;
+
+	public static IBridge bridge;
 	
 	public Control() throws Exception
 	{
-		HBridge.setup();
-		
+		bridge = new HueBridge();
+
 		if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off"))
 		{
 			turnAllLightsOn();
@@ -39,7 +43,7 @@ public class Control
 		double[] xy = HColor.translate(lightColor, Settings.getBoolean("gammacorrection")); // xy color
 		int bri = Math.round(Color.RGBtoHSB(lightColor.getRed(), lightColor.getGreen(), lightColor.getBlue(), null)[2] * 255); // brightness
 		
-		String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + light.id + "/state";	
+		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + light.id + "/state";
 		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
 		
 		// turn light off automatically if the brightness is very low
@@ -75,7 +79,7 @@ public class Control
 		
 		lastAutoSwitchBri = 0.0;
 		
-		for(HLight light : HBridge.lights)
+		for(HLight light : HueBridge.lights)
 		{
 			light.storeLightColor();
 		}
@@ -120,7 +124,7 @@ public class Control
 		if (Settings.getBoolean("restorelight"))
 		{
 			Thread.sleep(750);
-			for(HLight light : HBridge.lights)
+			for(HLight light : HueBridge.lights)
 			{
 				light.restoreLightColor();
 			}
@@ -138,7 +142,7 @@ public class Control
 	
 	public void turnAllLightsOn() throws Exception
 	{
-		for(HLight light : HBridge.lights)
+		for(HLight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{
@@ -150,7 +154,7 @@ public class Control
 
 	public void turnAllLightsOff() throws Exception
 	{
-		for(HLight light : HBridge.lights)
+		for(HLight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{

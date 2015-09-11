@@ -3,9 +3,11 @@ package hueimmersive.interfaces;
 
 public interface IBridge
 {
-	void register();
-	void login();
+	void register() throws Exception;
+	void login() throws Exception;
 
-	void find();
-	void connect();
+	void find() throws Exception;
+	void connect() throws Exception;
+
+	void findLights() throws Exception;
 }
