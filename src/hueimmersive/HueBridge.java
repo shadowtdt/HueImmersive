@@ -1,6 +1,7 @@
 package hueimmersive;
 
 import hueimmersive.interfaces.IBridge;
+import hueimmersive.interfaces.ILink;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -40,6 +41,11 @@ public class HueBridge implements IBridge
 			}
 		}
 		return null;
+	}
+
+	public ILink getLink()
+	{
+		throw new UnsupportedOperationException("getLink");
 	}
 
 	public void register() throws Exception
