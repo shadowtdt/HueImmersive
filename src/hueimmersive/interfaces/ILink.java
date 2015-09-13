@@ -16,13 +16,13 @@ public interface ILink
 
 	String getBaseAPIurl();
 
-	JsonObject GET(String APIurl);
+	JsonObject GET(String APIurl) throws Exception;
 
-	JsonObject PUT(String APIurl, JsonObject data);
+	JsonObject PUT(String APIurl, JsonObject data) throws Exception;
 
-	JsonObject POST(String APIurl, JsonObject data);
+	JsonObject POST(String APIurl, JsonObject data) throws Exception;
 
-	JsonObject DELETE();
+	JsonObject DELETE() throws Exception;
 
 	boolean canConnect(HttpURLConnection connection);
 
