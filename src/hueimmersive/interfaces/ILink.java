@@ -9,6 +9,7 @@ public interface ILink
 {
 	enum ResponseType
 	{
+		NULL,
 		DATA,
 		SUCCESS,
 		ERROR
