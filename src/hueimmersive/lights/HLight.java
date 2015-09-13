@@ -10,32 +10,37 @@ public abstract class HLight implements ILight
 		throw new UnsupportedOperationException("HLight");
 	}
 
-	public boolean isOn() throws Exception
+	public final boolean isOn() throws Exception
 	{
 		throw new UnsupportedOperationException("isOn");
 	}
 
-	public void setOn(boolean on)
+	public final void setOn(boolean on)
 	{
 		throw new UnsupportedOperationException("setOn");
 	}
 
-	public void turnOn()
+	public final void turnOn()
 	{
 		throw new UnsupportedOperationException("turnOn");
 	}
 
-	public void turnOff()
+	public final void turnOff()
 	{
 		throw new UnsupportedOperationException("turnOff");
 	}
 
-	public String getName()
+	public final String getName()
 	{
 		throw new UnsupportedOperationException("getName");
 	}
 
-	public String getUniqueID()
+	public final String getUniqueID()
+	{
+		throw new UnsupportedOperationException("getUniqueID");
+	}
+
+	public final int getID()
 	{
 		throw new UnsupportedOperationException("getUniqueID");
 	}
