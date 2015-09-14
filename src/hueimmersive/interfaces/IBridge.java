@@ -1,5 +1,7 @@
 package hueimmersive.interfaces;
 
+import java.util.ArrayList;
+
 
 public interface IBridge
 {
@@ -12,4 +14,5 @@ public interface IBridge
 	void connect() throws Exception;
 
 	void findLights() throws Exception;
+	ArrayList<ILight> getLights();
 }

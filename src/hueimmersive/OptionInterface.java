@@ -285,7 +285,7 @@ public class OptionInterface
 		
 			panel_Lights = new JPanel();
 			scrollpane.setViewportView(panel_Lights);
-			int rows = HueBridge.lights.size();
+			int rows = Control.bridge.getLights().size();
 			if (rows < 6)
 			{
 				rows = 6;
@@ -296,10 +296,10 @@ public class OptionInterface
 			scrollpane.setColumnHeaderView(lblActiveNameColor);
 			
 			// create the list
-			for (final ILight light : HueBridge.lights)
+			for (final ILight light : Control.bridge.getLights())
 			{
 				final JPanel panel_options = new JPanel();
-				panel_Lights.add(panel_options, HueBridge.lights.indexOf(light));
+				panel_Lights.add(panel_options, Control.bridge.getLights().indexOf(light));
 
 				JLabel label_Name = new JLabel(light.getName());
 				label_Name.setPreferredSize(new Dimension(110, 15));
@@ -474,9 +474,9 @@ public class OptionInterface
 		
 		Settings.set("screen", checkbox_Screen.getSelectedIndex());
 		
-		for (ILight light : HueBridge.lights)
+		for (ILight light : Control.bridge.getLights())
 		{
-			JPanel panel_Light = (JPanel) panel_Lights.getComponent(HueBridge.lights.indexOf(light));
+			JPanel panel_Light = (JPanel) panel_Lights.getComponent(Control.bridge.getLights().indexOf(light));
 			
 			JCheckBox checkbox_Active = (JCheckBox) panel_Light.getComponent(0);
 			Settings.Light.setActive(light, checkbox_Active.isSelected());

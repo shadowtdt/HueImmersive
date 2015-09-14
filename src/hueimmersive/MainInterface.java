@@ -187,12 +187,11 @@ public class MainInterface
 				break;
 			case 1:  //search and connect
 				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_connect.gif")));
-				Thread.sleep(1500);
+				Thread.sleep(2500);
 				break;
 			case 2:  // successfully connected
 				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_connected.png")));
 				Thread.sleep(500);
-				loadMainInterface();
 				break;
 			case 3:  // press link button
 				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_presslinkbutton.gif")));
@@ -643,8 +642,8 @@ public class MainInterface
 		{
 			boolean lightOn = false;
 			boolean lightOff = false;
-			
-			for(ILight light : HueBridge.lights)
+
+			for (ILight light : Control.bridge.getLights())
 			{
 				if (light.isOn() && Settings.Light.getActive(light))
 				{

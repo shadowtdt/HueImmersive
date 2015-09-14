@@ -22,6 +22,8 @@ public class Control
 	{
 		bridge = new HueBridge();
 
+		Main.ui.loadMainInterface();
+
 		if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off"))
 		{
 			setAllActiveLightsOn(true);
@@ -76,7 +78,7 @@ public class Control
 		
 		lastAutoSwitchBri = 0.0;
 		
-		for(ILight light : HueBridge.lights)
+		for(ILight light : bridge.getLights())
 		{
 			light.storeColor();
 		}
@@ -121,7 +123,7 @@ public class Control
 		if (Settings.getBoolean("restorelight"))
 		{
 			Thread.sleep(750);
-			for(ILight light : HueBridge.lights)
+			for(ILight light : bridge.getLights())
 			{
 				light.restoreColor();
 			}
@@ -139,7 +141,7 @@ public class Control
 	
 	public void setAllActiveLightsOn(boolean on) throws Exception
 	{
-		for(ILight light : HueBridge.lights)
+		for(ILight light : bridge.getLights())
 		{
 			if (Settings.Light.getActive(light))
 			{

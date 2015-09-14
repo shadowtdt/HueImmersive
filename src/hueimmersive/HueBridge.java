@@ -1,6 +1,7 @@
 package hueimmersive;
 
 import hueimmersive.interfaces.IBridge;
+import hueimmersive.interfaces.ILight;
 import hueimmersive.interfaces.ILink;
 import hueimmersive.lights.HColorLight;
 import hueimmersive.lights.HDimmableLight;
@@ -21,12 +22,12 @@ public final class HueBridge implements IBridge
 	final int maxRegisterAttempts = 20;
 	final int registerPeriod = 1500;
 
-	public static String internalipaddress = Settings.Bridge.getInternalipaddress();
+	private String internalipaddress = Settings.Bridge.getInternalipaddress();
 
-	public static final String username = "hueimmersiveuser";
-	public static final String devicetype = "hueimmersive";
-	
-	public static ArrayList<HLight> lights = new ArrayList<HLight>();
+	private final String username = "hueimmersiveuser";
+	private final String devicetype = "hueimmersive";
+
+	private final ArrayList<HLight> lights = new ArrayList<HLight>();
 
 	private final HueLink link = new HueLink();
 	
@@ -190,7 +191,6 @@ public final class HueBridge implements IBridge
 			debug();
 
 			findLights();
-			Main.ui.loadMainInterface();
 		}
 		else
 		{
@@ -225,16 +225,9 @@ public final class HueBridge implements IBridge
 		Debug.info(null, lights.size() + " lights found");
 	}
 
-	public HLight getLight(int id)
+	public ArrayList<ILight> getLights()
 	{
-		for (HLight light : lights)
-		{
-			if(light.getID() == id)
-			{
-				return light;
-			}
-		}
-		return null;
+		return new ArrayList<ILight>(lights);
 	}
 
 	public void debug() throws Exception
