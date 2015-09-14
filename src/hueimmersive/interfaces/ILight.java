@@ -6,10 +6,7 @@ import java.awt.Color;
 public interface ILight
 {
     boolean isOn() throws Exception;
-    void setOn(boolean on);
-
-    void turnOn();
-    void turnOff();
+    void setOn(boolean on) throws Exception;
 
     void setColor(Color color);
     Color getColor();

@@ -1,48 +1,60 @@
 package hueimmersive.lights;
 
 import hueimmersive.HueBridge;
+import hueimmersive.Settings;
 import hueimmersive.interfaces.ILight;
+
+import com.google.gson.JsonObject;
 
 
 public abstract class HLight implements ILight
 {
-	public HLight(int id, HueBridge bridge)
+	private final HueBridge bridge;
+
+	private final int id;
+	private final String name;
+	private final String uniqueid;
+
+	public HLight(int id, HueBridge bridge) throws Exception
 	{
-		throw new UnsupportedOperationException("HLight");
+		this.id = id;
+		this.bridge = bridge;
+
+		JsonObject response = bridge.getLink().GET("/lights/" + id);
+
+		this.name = response.get("name").getAsString();
+		this.uniqueid = response.get("uniqueid").getAsString();
+
+		//Settings.Light.check(this);
 	}
 
 	public final boolean isOn() throws Exception
 	{
-		throw new UnsupportedOperationException("isOn");
+		JsonObject response = bridge.getLink().GET("/lights/" + id);
+
+		return response.get("state").getAsJsonObject().get("on").getAsBoolean();
 	}
 
-	public final void setOn(boolean on)
+	public final void setOn(boolean on) throws Exception
 	{
-		throw new UnsupportedOperationException("setOn");
-	}
+		JsonObject data = new JsonObject();
+		data.addProperty("on", on);
 
-	public final void turnOn()
-	{
-		throw new UnsupportedOperationException("turnOn");
-	}
-
-	public final void turnOff()
-	{
-		throw new UnsupportedOperationException("turnOff");
+		bridge.getLink().PUT("/lights/" + id + "/state/", data);
 	}
 
 	public final String getName()
 	{
-		throw new UnsupportedOperationException("getName");
+		return name;
 	}
 
 	public final String getUniqueID()
 	{
-		throw new UnsupportedOperationException("getUniqueID");
+		return uniqueid;
 	}
 
 	public final int getID()
 	{
-		throw new UnsupportedOperationException("getUniqueID");
+		return id;
 	}
 }

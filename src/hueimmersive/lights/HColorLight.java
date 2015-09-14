@@ -7,7 +7,7 @@ import java.awt.Color;
 
 public class HColorLight extends HLight
 {
-	public HColorLight(int id, HueBridge bridge)
+	public HColorLight(int id, HueBridge bridge) throws Exception
 	{
 		super(id, bridge);
 	}
