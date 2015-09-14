@@ -25,7 +25,7 @@ public abstract class HLight implements ILight
 		this.name = response.get("name").getAsString();
 		this.uniqueid = response.get("uniqueid").getAsString();
 
-		//Settings.Light.check(this);
+		Settings.Light.check(this);
 	}
 
 	public final boolean isOn() throws Exception
