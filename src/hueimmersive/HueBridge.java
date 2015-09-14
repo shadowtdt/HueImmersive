@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 
 
 public class HueBridge implements IBridge
@@ -18,6 +18,8 @@ public class HueBridge implements IBridge
 	public static final String devicetype = "hueimmersive";
 	
 	public static ArrayList<HueLight> lights = new ArrayList<HueLight>();
+
+	private final HueLink link = new HueLink();
 	
 	public HueBridge() throws Exception
 	{
@@ -45,38 +47,46 @@ public class HueBridge implements IBridge
 
 	public ILink getLink()
 	{
-		throw new UnsupportedOperationException("getLink");
+		return link;
 	}
 
 	public void register() throws Exception
 	{
 		Debug.info(null, "create new user...");
+
 		Main.ui.setConnectState(3);
 
+		JsonObject data = new JsonObject();
+		data.addProperty("devicetype", devicetype);
+		data.addProperty("username", username);
+
 		final Timer timer = new Timer();
-		TimerTask addUserLoop = new TimerTask()
+		TimerTask registerLoop = new TimerTask()
 		{
-			String body = "{\"devicetype\": \"" + devicetype + "\", \"username\": \"" + username + "\"}";
-			int tries = 0;
+			int attempt = 0;
 			public void run()
 			{
 				try // to register a new bridge user (user must press the link button)
 				{
-					tries++;
-					JsonObject response = Request.POST("http://" + internalipaddress + "/api/", body);
-					if (Request.responseCheck(response) == "success")
+					attempt++;
+					JsonObject response = getLink().POST("http://" + internalipaddress + "/api/", data);
+					if (getLink().getResponseType(response) == ILink.ResponseType.SUCCESS)
 					{
+						Debug.info(null, "new user created");
+
 						timer.cancel();
 						timer.purge();
-						Debug.info(null, "new user created");
+
 						login();
 					}
-					else if (tries > 20) // abort after serval tries
+					else if (attempt > 20) // abort after serval attempt
 					{
+						Debug.info(null, "link button not pressed");
+
 						timer.cancel();
 						timer.purge();
+
 						Main.ui.setConnectState(4);
-						Debug.info(null, "link button not pressed");
 					}
 				}
 				catch (Exception e)
@@ -85,23 +95,25 @@ public class HueBridge implements IBridge
 				}
 			}
 		};
-		timer.scheduleAtFixedRate(addUserLoop, 1500, 1500);
+		timer.scheduleAtFixedRate(registerLoop, 1500, 1500);
 	}
 
 	public void login() throws Exception // try to login
 	{
-		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
-		if (Request.responseCheck(response) == "data")
+		JsonObject response = getLink().GET("http://" + internalipaddress + "/api/" + username);
+		if (getLink().getResponseType(response) == ILink.ResponseType.DATA)
 		{
 			Debug.info(null, "login successfull");
-			
+
+			getLink().setBaseAPIurl("http://" + internalipaddress + "/api/" + username);
+
 			debug();
 			
 			findLights();
 			
 			Main.ui.setConnectState(2);
 		}
-		else if (Request.responseCheck(response) == "error")
+		else if (getLink().getResponseType(response) == ILink.ResponseType.ERROR)
 		{
 			register();
 		}
@@ -122,7 +134,7 @@ public class HueBridge implements IBridge
 			{
 				try // to get the bridge ip
 				{
-					JsonObject response = Request.GET("https://www.meethue.com/api/nupnp");
+					JsonObject response = getLink().GET("https://www.meethue.com/api/nupnp");
 
 					if (response != null)
 					{
@@ -168,11 +180,13 @@ public class HueBridge implements IBridge
 	{
 		Debug.info(null, "try fast connect...");
 
-		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
+		JsonObject response = getLink().GET("http://" + internalipaddress + "/api/" + username);
 
-		if (Request.responseCheck(response) == "data")
+		if (getLink().getResponseType(response) == ILink.ResponseType.DATA)
 		{
 			Debug.info(null, "fast connect successfull");
+
+			getLink().setBaseAPIurl("http://" + internalipaddress + "/api/" + username);
 
 			debug();
 
@@ -189,7 +203,7 @@ public class HueBridge implements IBridge
 
 	public void debug() throws Exception
 	{
-		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username + "/config/");
+		JsonObject response = getLink().GET("/config");
 		
 		Debug.info("bridge infos", 
 				"name: " + response.get("name").getAsString(), 
@@ -202,7 +216,8 @@ public class HueBridge implements IBridge
 	public void findLights() throws Exception
 	{
 		Debug.info(null, "get lights...");
-		JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username + "/lights/");
+
+		JsonObject response = getLink().GET("/lights");
 		
 		for (int i = 1; i < 50; i++)
 		{

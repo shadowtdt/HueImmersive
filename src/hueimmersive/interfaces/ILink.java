@@ -17,6 +17,8 @@ public interface ILink
 
 	String getBaseAPIurl();
 
+	void setBaseAPIurl(String baseAPIurl);
+
 	JsonObject GET(String APIurl) throws Exception;
 
 	JsonObject PUT(String APIurl, JsonObject data) throws Exception;

@@ -7,11 +7,6 @@ import com.google.gson.JsonParser;
 
 public final class HueLink extends Link
 {
-	public HueLink(String baseAPIurl)
-	{
-		super(baseAPIurl);
-	}
-
 	public ResponseType getResponseType(JsonObject response)
 	{
 		ResponseType result;

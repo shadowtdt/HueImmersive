@@ -13,16 +13,16 @@ import java.net.URL;
 
 public abstract class Link implements ILink
 {
-	private final String baseAPIurl;
-
-	public Link(String baseAPIurl)
-	{
-		this.baseAPIurl = baseAPIurl;
-	}
+	private String baseAPIurl = "";
 
 	public final String getBaseAPIurl()
 	{
 		return baseAPIurl;
+	}
+
+	public final void setBaseAPIurl(String baseAPIurl)
+	{
+		this.baseAPIurl = baseAPIurl;
 	}
 
 	public final JsonObject GET(String APIurl) throws Exception
