@@ -1,13 +1,15 @@
 package hueimmersive.lights;
 
+import hueimmersive.HueBridge;
+
 import java.awt.Color;
 
 
 public class HDimmableLight extends HLight
 {
-	public HDimmableLight(int id)
+	public HDimmableLight(int id, HueBridge bridge)
 	{
-		super(id);
+		super(id, bridge);
 	}
 
 	public void setColor(Color color)

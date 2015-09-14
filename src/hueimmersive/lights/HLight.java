@@ -1,11 +1,12 @@
 package hueimmersive.lights;
 
+import hueimmersive.HueBridge;
 import hueimmersive.interfaces.ILight;
 
 
 public abstract class HLight implements ILight
 {
-	public HLight(int id)
+	public HLight(int id, HueBridge bridge)
 	{
 		throw new UnsupportedOperationException("HLight");
 	}
