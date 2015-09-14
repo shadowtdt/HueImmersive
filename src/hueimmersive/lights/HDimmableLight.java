@@ -2,33 +2,54 @@ package hueimmersive.lights;
 
 import hueimmersive.HueBridge;
 
+import com.google.gson.JsonObject;
+
 import java.awt.Color;
 
 
 public class HDimmableLight extends HLight
 {
+	private int[] storedColor = new int[1];
+
 	public HDimmableLight(int id, HueBridge bridge) throws Exception
 	{
 		super(id, bridge);
 	}
 
-	public void setColor(Color color)
+	public void setColor(Color color) throws Exception
 	{
-		throw new UnsupportedOperationException("setColor");
+		float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+
+		int bri = Math.round(hsbColor[2] * 255);
+
+		JsonObject data = new JsonObject();
+		data.addProperty("bri", bri);
+
+		bridge.getLink().PUT("/lights/" + id + "/state/", data);
 	}
 
-	public Color getColor()
+	public Color getColor() throws Exception
 	{
-		throw new UnsupportedOperationException("getColor");
+		JsonObject response = bridge.getLink().GET("/lights/" + id);
+
+		float bri = response.get("state").getAsJsonObject().get("bri").getAsFloat() / 255.0f;
+
+		return Color.getHSBColor(0, 0, bri);
 	}
 
-	public void storeColor()
+	public void storeColor() throws Exception
 	{
-		throw new UnsupportedOperationException("storeColor");
+		JsonObject response = bridge.getLink().GET("/lights/" + id);
+
+		storedColor[0] = response.get("state").getAsJsonObject().get("bri").getAsInt();
 	}
 
-	public void restoreColor()
+	public void restoreColor() throws Exception
 	{
-		throw new UnsupportedOperationException("restoreColor");
+		JsonObject data = new JsonObject();
+		data.addProperty("bri", storedColor[0]);
+		data.addProperty("transitiontime", 1);
+
+		bridge.getLink().PUT("/lights/" + id + "/state/", data);
 	}
 }

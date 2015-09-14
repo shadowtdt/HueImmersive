@@ -9,11 +9,11 @@ import com.google.gson.JsonObject;
 
 public abstract class HLight implements ILight
 {
-	private final HueBridge bridge;
+	protected final HueBridge bridge;
 
-	private final int id;
-	private final String name;
-	private final String uniqueid;
+	protected final int id;
+	protected final String name;
+	protected final String uniqueid;
 
 	public HLight(int id, HueBridge bridge) throws Exception
 	{
