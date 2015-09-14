@@ -1,6 +1,7 @@
 package hueimmersive;
 
 import hueimmersive.interfaces.IBridge;
+import hueimmersive.interfaces.ILight;
 
 import java.awt.Color;
 import java.util.Timer;
@@ -35,17 +36,14 @@ public class Control
 		}
 	}
 	
-	public void setLight(HueLight light, Color color) throws Exception // calculate color and send it to light
+	public void setLight(ILight light, Color color) throws Exception // calculate color and send it to light
 	{		
-		float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
-		Color lightColor = Color.getHSBColor(colorHSB[0], Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
+		float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified HSB color
+		color = Color.getHSBColor(hsbColor[0], Math.max(0f, Math.min(1f, hsbColor[1] * (Main.ui.slider_Saturation.getValue() / 100f))), (float)(hsbColor[2] * (Main.ui.slider_Brightness.getValue() / 100f) * (Settings.Light.getBrightness(light) / 100f))); // modified color
 		
-		double[] xy = HueColor.translate(lightColor, Settings.getBoolean("gammacorrection")); // xy color
-		int bri = Math.round(Color.RGBtoHSB(lightColor.getRed(), lightColor.getGreen(), lightColor.getBlue(), null)[2] * 255); // brightness
-		
-		String APIurl = "http://" + HueBridge.internalipaddress + "/api/" + HueBridge.username + "/lights/" + light.id + "/state";
-		String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + transitionTime + "}";
-		
+		light.setColor(color);
+
+		/*
 		// turn light off automatically if the brightness is very low
 		double autoSwitchThreshold = Settings.getInteger("autoswitchthreshold") / 100.0;
 		if (Settings.getBoolean("autoswitch"))
@@ -64,8 +62,7 @@ public class Control
 		{
 			data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":" + Math.round(transitionTime * 0.45) + "}";
 		}
-		
-		Request.PUT(APIurl, data);
+		*/
 	}
 	
 	public void startImmersiveProcess() throws Exception
@@ -79,9 +76,9 @@ public class Control
 		
 		lastAutoSwitchBri = 0.0;
 		
-		for(HueLight light : HueBridge.lights)
+		for(ILight light : HueBridge.lights)
 		{
-			light.storeLightColor();
+			light.storeColor();
 		}
 		
 		// create a loop to execute the immersive process
@@ -124,9 +121,9 @@ public class Control
 		if (Settings.getBoolean("restorelight"))
 		{
 			Thread.sleep(750);
-			for(HueLight light : HueBridge.lights)
+			for(ILight light : HueBridge.lights)
 			{
-				light.restoreLightColor();
+				light.restoreColor();
 			}
 		}
 	}
@@ -142,11 +139,11 @@ public class Control
 	
 	public void turnAllLightsOn() throws Exception
 	{
-		for(HueLight light : HueBridge.lights)
+		for(ILight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{
-				light.turnOn();
+				light.setOn(true);
 			}
 		}
 		Main.ui.setupOnOffButton();
@@ -154,11 +151,11 @@ public class Control
 
 	public void turnAllLightsOff() throws Exception
 	{
-		for(HueLight light : HueBridge.lights)
+		for(ILight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{
-				light.turnOff();
+				light.setOn(false);
 			}
 		}
 		Main.ui.setupOnOffButton();

@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.prefs.Preferences;
@@ -207,9 +209,9 @@ public class Settings
 		private int nexAlg = 0;
 		private int maxAlg = ImmersiveProcess.algorithms;
 
-		public void check(HueLight light) throws Exception // setup default light settings if it doesn't have
+		public void check(ILight light) throws Exception // setup default light settings if it doesn't have
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			if (lprefs.get("active", null) == null)
 			{
 				lprefs.putBoolean("active", true);
@@ -245,35 +247,35 @@ public class Settings
 			Debug.info("settings lights", settings);
 		}
 
-		public void setBrightness(HueLight light, int bri)
+		public void setBrightness(ILight light, int bri)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			lprefs.putInt("bri", bri);
 		}
-		public void setActive(HueLight light, boolean active)
+		public void setActive(ILight light, boolean active)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			lprefs.putBoolean("active", active);
 		}
-		public void setAlgorithm(HueLight light, int alg)
+		public void setAlgorithm(ILight light, int alg)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			lprefs.putInt("alg", alg);
 		}
 
-		public boolean getActive(HueLight light)
+		public boolean getActive(ILight light)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			return lprefs.getBoolean("active", true);
 		}
-		public int getAlgorithm(HueLight light)
+		public int getAlgorithm(ILight light)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			return lprefs.getInt("alg", -1);
 		}
-		public int getBrightness(HueLight light)
+		public int getBrightness(ILight light)
 		{
-			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
+			Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.getUniqueID());
 			return lprefs.getInt("bri", -1);
 		}
 	}

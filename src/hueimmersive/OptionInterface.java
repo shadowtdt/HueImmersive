@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
@@ -294,12 +296,12 @@ public class OptionInterface
 			scrollpane.setColumnHeaderView(lblActiveNameColor);
 			
 			// create the list
-			for (final HueLight light : HueBridge.lights)
+			for (final ILight light : HueBridge.lights)
 			{
 				final JPanel panel_options = new JPanel();
 				panel_Lights.add(panel_options, HueBridge.lights.indexOf(light));
 
-				JLabel label_Name = new JLabel(light.name);
+				JLabel label_Name = new JLabel(light.getName());
 				label_Name.setPreferredSize(new Dimension(110, 15));
 				
 				final JList list_Algorithms = new JList();
@@ -472,7 +474,7 @@ public class OptionInterface
 		
 		Settings.set("screen", checkbox_Screen.getSelectedIndex());
 		
-		for (HueLight light : HueBridge.lights)
+		for (ILight light : HueBridge.lights)
 		{
 			JPanel panel_Light = (JPanel) panel_Lights.getComponent(HueBridge.lights.indexOf(light));
 			

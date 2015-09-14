@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.UIManager;
@@ -642,7 +644,7 @@ public class MainInterface
 			boolean lightOn = false;
 			boolean lightOff = false;
 			
-			for(HueLight light : HueBridge.lights)
+			for(ILight light : HueBridge.lights)
 			{
 				if (light.isOn() && Settings.Light.getActive(light))
 				{

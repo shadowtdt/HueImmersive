@@ -2,6 +2,9 @@ package hueimmersive;
 
 import hueimmersive.interfaces.IBridge;
 import hueimmersive.interfaces.ILink;
+import hueimmersive.lights.HColorLight;
+import hueimmersive.lights.HDimmableLight;
+import hueimmersive.lights.HLight;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -23,7 +26,7 @@ public final class HueBridge implements IBridge
 	public static final String username = "hueimmersiveuser";
 	public static final String devicetype = "hueimmersive";
 	
-	public static ArrayList<HueLight> lights = new ArrayList<HueLight>();
+	public static ArrayList<HLight> lights = new ArrayList<HLight>();
 
 	private final HueLink link = new HueLink();
 	
@@ -210,7 +213,11 @@ public final class HueBridge implements IBridge
 				JsonObject state = response.getAsJsonObject(String.valueOf(i)).getAsJsonObject("state");
 				if (state.has("on") && state.has("hue") && state.has("sat") && state.has("bri"))
 				{
-					lights.add(new HueLight(i));
+					lights.add(new HColorLight(i, this));
+				}
+				else if (state.has("on") && state.has("bri"))
+				{
+					lights.add(new HDimmableLight(i, this));
 				}
 			}
 		}
@@ -218,11 +225,11 @@ public final class HueBridge implements IBridge
 		Debug.info(null, lights.size() + " lights found");
 	}
 
-	public HueLight getLight(int lightID)
+	public HLight getLight(int id)
 	{
-		for (HueLight light : lights)
+		for (HLight light : lights)
 		{
-			if(light.id == lightID)
+			if(light.getID() == id)
 			{
 				return light;
 			}
