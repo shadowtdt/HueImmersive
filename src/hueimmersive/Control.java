@@ -24,11 +24,11 @@ public class Control
 
 		if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off"))
 		{
-			turnAllLightsOn();
+			setAllActiveLightsOn(true);
 		}
 		if (Main.arguments.contains("force-off") && !Main.arguments.contains("force-on"))
 		{
-			turnAllLightsOff();
+			setAllActiveLightsOn(false);
 		}
 		if (Main.arguments.contains("force-start") && !Main.arguments.contains("force-off"))
 		{
@@ -137,28 +137,15 @@ public class Control
 		ImmersiveProcess.execute();
 	}
 	
-	public void turnAllLightsOn() throws Exception
+	public void setAllActiveLightsOn(boolean on) throws Exception
 	{
 		for(ILight light : HueBridge.lights)
 		{
 			if (Settings.Light.getActive(light))
 			{
-				light.setOn(true);
+				light.setOn(on);
 			}
 		}
 		Main.ui.setupOnOffButton();
 	}
-
-	public void turnAllLightsOff() throws Exception
-	{
-		for(ILight light : HueBridge.lights)
-		{
-			if (Settings.Light.getActive(light))
-			{
-				light.setOn(false);
-			}
-		}
-		Main.ui.setupOnOffButton();
-	}
-
 }

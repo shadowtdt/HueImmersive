@@ -232,7 +232,7 @@ public class MainInterface
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					Main.hueControl.turnAllLightsOn();
+					Main.hueControl.setAllActiveLightsOn(true);
 				} catch (Exception e)
 				{
 					Debug.exception(e);
@@ -249,7 +249,7 @@ public class MainInterface
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					Main.hueControl.turnAllLightsOff();
+					Main.hueControl.setAllActiveLightsOn(false);
 				} catch (Exception e)
 				{
 					Debug.exception(e);
