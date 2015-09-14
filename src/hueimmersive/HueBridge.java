@@ -10,8 +10,14 @@ import java.util.TimerTask;
 import com.google.gson.JsonObject;
 
 
-public class HueBridge implements IBridge
+public final class HueBridge implements IBridge
 {
+	final int maxFindAttempts = 6;
+	final int findPeriod = 1500;
+
+	final int maxRegisterAttempts = 20;
+	final int registerPeriod = 1500;
+
 	public static String internalipaddress = Settings.Bridge.getInternalipaddress();
 
 	public static final String username = "hueimmersiveuser";
@@ -31,18 +37,6 @@ public class HueBridge implements IBridge
 		{
 			find();
 		}
-	}
-	
-	public HueLight getLight(int lightID)
-	{
-		for (HueLight light : lights)
-		{
-			if(light.id == lightID)
-			{
-				return light;
-			}
-		}
-		return null;
 	}
 
 	public ILink getLink()
@@ -79,7 +73,7 @@ public class HueBridge implements IBridge
 
 						login();
 					}
-					else if (attempt > 20) // abort after serval attempt
+					else if (attempt > maxRegisterAttempts) // abort after serval attempt
 					{
 						Debug.info(null, "link button not pressed");
 
@@ -95,7 +89,7 @@ public class HueBridge implements IBridge
 				}
 			}
 		};
-		timer.scheduleAtFixedRate(registerLoop, 1500, 1500);
+		timer.scheduleAtFixedRate(registerLoop, registerPeriod, registerPeriod);
 	}
 
 	public void login() throws Exception // try to login
@@ -127,9 +121,9 @@ public class HueBridge implements IBridge
 		Main.ui.setConnectState(1);
 
 		final Timer timer = new Timer();
-		TimerTask addUserLoop = new TimerTask()
+		TimerTask findLoop = new TimerTask()
 		{
-			int tries = 0;
+			int attempt = 0;
 			public void run()
 			{
 				try // to get the bridge ip
@@ -138,14 +132,14 @@ public class HueBridge implements IBridge
 
 					if (response != null)
 					{
+						Debug.info(null, "bridge found");
+
 						timer.cancel();
 						timer.purge();
 
 						internalipaddress = response.get("internalipaddress").getAsString();
 
 						Settings.Bridge.setInternalipaddress(internalipaddress);
-
-						Debug.info(null, "bridge found");
 
 						login();
 					}
@@ -155,14 +149,16 @@ public class HueBridge implements IBridge
 					Debug.exception(e);
 				}
 
-				if (tries > 6) // abort after serval tries
+				if (attempt > maxFindAttempts) // abort after serval attempts
 				{
 					try
 					{
+						Debug.info(null, "connection to bridge timeout");
+
 						timer.cancel();
 						timer.purge();
+
 						Main.ui.setConnectState(4);
-						Debug.info(null, "connection to bridge timeout");
 					}
 					catch (Exception e)
 					{
@@ -170,10 +166,10 @@ public class HueBridge implements IBridge
 					}
 				}
 
-				tries++;
+				attempt++;
 			}
 		};
-		timer.scheduleAtFixedRate(addUserLoop, 0, 1500);
+		timer.scheduleAtFixedRate(findLoop, 0, findPeriod);
 	}
 
 	public void connect() throws Exception
@@ -200,18 +196,6 @@ public class HueBridge implements IBridge
 			find();
 		}
 	}
-
-	public void debug() throws Exception
-	{
-		JsonObject response = getLink().GET("/config");
-		
-		Debug.info("bridge infos", 
-				"name: " + response.get("name").getAsString(), 
-				"ipaddress: " + response.get("ipaddress").getAsString(), 
-				"timezone: " + response.get("timezone").getAsString(),
-				"swversion: " + response.get("swversion").getAsString(),
-				"apiversion: " + response.get("apiversion").getAsString());
-	}
 	
 	public void findLights() throws Exception
 	{
@@ -232,5 +216,29 @@ public class HueBridge implements IBridge
 		}
 
 		Debug.info(null, lights.size() + " lights found");
+	}
+
+	public HueLight getLight(int lightID)
+	{
+		for (HueLight light : lights)
+		{
+			if(light.id == lightID)
+			{
+				return light;
+			}
+		}
+		return null;
+	}
+
+	public void debug() throws Exception
+	{
+		JsonObject response = getLink().GET("/config");
+
+		Debug.info("bridge infos",
+				"name: " + response.get("name").getAsString(),
+				"ipaddress: " + response.get("ipaddress").getAsString(),
+				"timezone: " + response.get("timezone").getAsString(),
+				"swversion: " + response.get("swversion").getAsString(),
+				"apiversion: " + response.get("apiversion").getAsString());
 	}
 }
