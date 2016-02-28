@@ -86,7 +86,7 @@ public class Settings
 		prefs.putInt("autoswitchthreshold", 10);
 		prefs.putBoolean("gammacorrection", true);
 		prefs.putInt("screen", 0);
-		prefs.putInt("refreshdelay", 16);
+		prefs.putInt("refreshdelay", 4);
 	}
 
 	public static void reset(boolean exit) throws Exception // delete all settings and exit the program

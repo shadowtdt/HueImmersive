@@ -101,7 +101,7 @@ public class Control
 		};
 		
 		immersiveProcessIsActive = true;
-		captureLoop.scheduleAtFixedRate(task, 0, Math.round(Settings.getInteger("refreshdelay") * 20));
+		captureLoop.scheduleAtFixedRate(task, 0, Math.round(Settings.getInteger("refreshdelay") * 100));
 	}
 	
 	public void stopImmersiveProcess() throws Exception
