@@ -12,7 +12,6 @@ public class Control
 {
 	public static boolean immersiveProcessIsActive = false;
 	private Timer captureLoop;
-	private int transitionTime = 5;
 	
 	private double lastAutoSwitchBri;
 
@@ -101,7 +100,7 @@ public class Control
 		};
 		
 		immersiveProcessIsActive = true;
-		captureLoop.scheduleAtFixedRate(task, 0, Math.round(transitionTime * 100 * 0.68));
+		captureLoop.scheduleAtFixedRate(task, 0, Math.round(Settings.getInteger("refreshdelay")));
 	}
 	
 	public void stopImmersiveProcess() throws Exception

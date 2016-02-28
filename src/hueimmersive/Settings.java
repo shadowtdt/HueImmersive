@@ -35,7 +35,8 @@ public class Settings
 				"autoswitch", 
 				"autoswitchthreshold", 
 				"gammacorrection", 
-				"screen"};
+				"screen",
+				"refreshdelay"};
 			
 			if(keys.containsAll(Arrays.asList(settingList)) == false)
 			{
@@ -85,6 +86,7 @@ public class Settings
 		prefs.putInt("autoswitchthreshold", 10);
 		prefs.putBoolean("gammacorrection", true);
 		prefs.putInt("screen", 0);
+		prefs.putInt("refreshdelay", 400);
 	}
 
 	public static void reset(boolean exit) throws Exception // delete all settings and exit the program
