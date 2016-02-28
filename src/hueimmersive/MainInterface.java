@@ -456,21 +456,21 @@ public class MainInterface
 		// Slider RefreshDelay
 		slider_RefreshDelay = new JSlider();
 		slider_RefreshDelay.setToolTipText("set the delay between updating your lights");
-		slider_RefreshDelay.setMaximum(10);
-		slider_RefreshDelay.setMinorTickSpacing(1);
-		slider_RefreshDelay.setMinimum(1);
+		slider_RefreshDelay.setMaximum(1000);
+		slider_RefreshDelay.setMinorTickSpacing(100);
+		slider_RefreshDelay.setMinimum(100);
 		slider_RefreshDelay.setValue(Settings.getInteger("refreshdelay"));
 		slider_RefreshDelay.setSnapToTicks(true);
 		slider_RefreshDelay.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				label_RefreshDelayAmount.setText(String.valueOf(slider_RefreshDelay.getValue()));
+				label_RefreshDelayAmount.setText(String.valueOf(slider_RefreshDelay.getValue()) + " ms");
 				Settings.set("refreshdelay", slider_RefreshDelay.getValue());
 			}
 		});
 		panel_RefreshDelay.add(slider_RefreshDelay, "1, 1, center, center");
 
 		// Label RefreshDelay percentage
-		label_RefreshDelayAmount = new JLabel(Integer.toString(Settings.getInteger("refreshdelay")));
+		label_RefreshDelayAmount = new JLabel(Settings.getInteger("refreshdelay") + " ms");
 		panel_RefreshDelay.add(label_RefreshDelayAmount, "2, 1, center, center");
 		
 		frame.getContentPane().add(checkbox_ShowColorGrid, "1, 7, 4, 1");
