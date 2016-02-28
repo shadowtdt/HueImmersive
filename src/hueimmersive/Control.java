@@ -101,7 +101,7 @@ public class Control
 		};
 		
 		immersiveProcessIsActive = true;
-		captureLoop.scheduleAtFixedRate(task, 0, Math.round(transitionTime * 100 * 0.68));
+		captureLoop.scheduleAtFixedRate(task, 0, Math.round(Settings.getInteger("refreshspeed") * 30));
 	}
 	
 	public void stopImmersiveProcess() throws Exception
