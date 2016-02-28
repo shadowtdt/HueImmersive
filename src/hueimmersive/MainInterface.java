@@ -455,7 +455,7 @@ public class MainInterface
 
 		// Slider RefreshDelay
 		slider_RefreshDelay = new JSlider();
-		slider_RefreshDelay.setToolTipText("set the delay between refreshes");
+		slider_RefreshDelay.setToolTipText("set the delay between updating your lights");
 		slider_RefreshDelay.setMaximum(40);
 		slider_RefreshDelay.setMinorTickSpacing(5);
 		slider_RefreshDelay.setMinimum(1);
