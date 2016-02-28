@@ -495,6 +495,7 @@ public class MainInterface
 			{
 				try
 				{
+					slider_RefreshDelay.setEnabled(true);
 					Main.hueControl.stopImmersiveProcess();
 				} 
 				catch (Exception e)
@@ -513,6 +514,7 @@ public class MainInterface
 			{
 				try
 				{
+					slider_RefreshDelay.setEnabled(false);
 					Main.hueControl.startImmersiveProcess();
 				} 
 				catch (Exception e)
