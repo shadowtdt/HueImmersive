@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.UIManager;
@@ -48,7 +50,7 @@ import javax.swing.ImageIcon;
 import java.awt.BorderLayout;
 
 
-public class UserInterface
+public class MainInterface
 {
 	private JFrame frame;
 	private JLabel labelConnect;
@@ -82,8 +84,12 @@ public class UserInterface
 	private JPanel panel_Saturation;
 	public JSlider slider_Saturation;
 	private JLabel label_SaturationPercentage;
+	private JLabel label_RefreshDelay;
+	private JPanel panel_RefreshDelay;
+	public JSlider slider_RefreshDelay;
+	private JLabel label_RefreshDelayAmount;
 	
-	public UserInterface() throws Exception
+	public MainInterface() throws Exception
 	{
 		setLookAndFeel();
 		initialize();
@@ -184,19 +190,18 @@ public class UserInterface
 				labelConnect.setIcon(null);
 				break;
 			case 1:  //search and connect
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_connect.gif")));
-				Thread.sleep(1500);
+				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_connect.gif")));
+				Thread.sleep(2500);
 				break;
 			case 2:  // successfully connected
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_connected.png")));
+				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_connected.png")));
 				Thread.sleep(500);
-				loadMainInterface();
 				break;
 			case 3:  // press link button
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_presslinkbutton.gif")));
+				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_presslinkbutton.gif")));
 				break;
 			case 4:  // timeout
-				labelConnect.setIcon(new ImageIcon(UserInterface.class.getResource("/images/hue_timeout.png")));
+				labelConnect.setIcon(new ImageIcon(MainInterface.class.getResource("/resources/hue_timeout.png")));
 				break;
 		}
 	}
@@ -220,7 +225,8 @@ public class UserInterface
 				RowSpec.decode("24px:grow"),
 				RowSpec.decode("24px:grow"),
 				RowSpec.decode("24px:grow"),
-				RowSpec.decode("24px:grow"),}));
+				RowSpec.decode("24px:grow"),
+				RowSpec.decode("24px:grow")}));
 		
 		// Button ON
 		button_On = new JButton("ON");
@@ -230,7 +236,7 @@ public class UserInterface
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					Main.hueControl.turnAllLightsOn();
+					Main.hueControl.setAllActiveLightsOn(true);
 				} catch (Exception e)
 				{
 					Debug.exception(e);
@@ -247,7 +253,7 @@ public class UserInterface
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					Main.hueControl.turnAllLightsOff();
+					Main.hueControl.setAllActiveLightsOn(false);
 				} catch (Exception e)
 				{
 					Debug.exception(e);
@@ -434,7 +440,40 @@ public class UserInterface
 		// Label saturation percentage
 		label_SaturationPercentage = new JLabel(Settings.getInteger("saturation") + " %");
 		panel_Saturation.add(label_SaturationPercentage, "2, 1, center, center");
-		frame.getContentPane().add(checkbox_ShowColorGrid, "1, 6, 4, 1");
+		
+		// Label "refresh speed"
+		label_RefreshDelay = new JLabel("   refresh delay");
+		label_RefreshDelay.setHorizontalAlignment(SwingConstants.LEFT);
+		frame.getContentPane().add(label_RefreshDelay, "1, 6, left, center");
+
+		// Panel to hold RefreshDelay Slider and RefreshDelay percentage Label
+		panel_RefreshDelay = new JPanel();
+		frame.getContentPane().add(panel_RefreshDelay, "2, 6, 3, 1, fill, fill");
+		panel_RefreshDelay.setLayout(
+				new FormLayout(new ColumnSpec[] { ColumnSpec.decode("115px"), ColumnSpec.decode("right:38px:grow"), },
+						new RowSpec[] { RowSpec.decode("26px"), }));
+
+		// Slider RefreshDelay
+		slider_RefreshDelay = new JSlider();
+		slider_RefreshDelay.setToolTipText("set the delay between updating your lights");
+		slider_RefreshDelay.setMaximum(1000);
+		slider_RefreshDelay.setMinorTickSpacing(100);
+		slider_RefreshDelay.setMinimum(100);
+		slider_RefreshDelay.setValue(Settings.getInteger("refreshdelay"));
+		slider_RefreshDelay.setSnapToTicks(true);
+		slider_RefreshDelay.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				label_RefreshDelayAmount.setText(String.valueOf(slider_RefreshDelay.getValue()) + " ms");
+				Settings.set("refreshdelay", slider_RefreshDelay.getValue());
+			}
+		});
+		panel_RefreshDelay.add(slider_RefreshDelay, "1, 1, center, center");
+
+		// Label RefreshDelay percentage
+		label_RefreshDelayAmount = new JLabel(Settings.getInteger("refreshdelay") + " ms");
+		panel_RefreshDelay.add(label_RefreshDelayAmount, "2, 1, center, center");
+		
+		frame.getContentPane().add(checkbox_ShowColorGrid, "1, 7, 4, 1");
 		
 		// CheckBox restore light
 		checkbox_RestoreLight = new JCheckBox("   restore light (experimental v1)");
@@ -446,7 +485,7 @@ public class UserInterface
 			}
 		});
 		checkbox_RestoreLight.setSelected(Settings.getBoolean("restorelight"));
-		frame.getContentPane().add(checkbox_RestoreLight, "1, 7, 4, 1");
+		frame.getContentPane().add(checkbox_RestoreLight, "1, 8, 4, 1");
 		
 		// Button stop
 		button_Stop = new JButton("STOP");
@@ -456,6 +495,7 @@ public class UserInterface
 			{
 				try
 				{
+					slider_RefreshDelay.setEnabled(true);
 					Main.hueControl.stopImmersiveProcess();
 				} 
 				catch (Exception e)
@@ -464,7 +504,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Stop, "1, 8, fill, center");
+		frame.getContentPane().add(button_Stop, "1, 9, fill, center");
 		
 		// Button start
 		button_Start = new JButton("START");
@@ -474,6 +514,7 @@ public class UserInterface
 			{
 				try
 				{
+					slider_RefreshDelay.setEnabled(false);
 					Main.hueControl.startImmersiveProcess();
 				} 
 				catch (Exception e)
@@ -482,7 +523,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Start, "2, 8, 2, 1, default, center");
+		frame.getContentPane().add(button_Start, "2, 9, 2, 1, default, center");
 		
 		// Button once
 		button_Once = new JButton("ONCE");
@@ -499,7 +540,7 @@ public class UserInterface
 				}
 			}
 		});
-		frame.getContentPane().add(button_Once, "4, 8, default, center");
+		frame.getContentPane().add(button_Once, "4, 9, default, center");
 		
 		// MenuBar
 		menubar = new JMenuBar();
@@ -641,8 +682,8 @@ public class UserInterface
 		{
 			boolean lightOn = false;
 			boolean lightOff = false;
-			
-			for(HLight light : HBridge.lights)
+
+			for (ILight light : Control.bridge.getLights())
 			{
 				if (light.isOn() && Settings.Light.getActive(light))
 				{

@@ -1,12 +1,14 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import java.awt.event.WindowAdapter;
@@ -19,6 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
@@ -50,6 +53,9 @@ public class OptionInterface
 {
 	private JFrame frame;
 	private JCheckBox checkbox_AutoTurnOff;
+	private JLabel label_ThresholdPercentage;
+	private JSlider slider_Threshold;
+	private JLabel label_BrightnessThreshold;
 	private JCheckBox checkbox_UseGammaCorrection;
 	private JPanel panel_Lights;
 	private JComboBox checkbox_Screen;
@@ -57,6 +63,7 @@ public class OptionInterface
 	private JCheckBox checkbox_ForceStart;
 	private JCheckBox checkbox_ForceOff;
 	private JCheckBox checkbox_Log;
+	private JPanel panel_Threshold;
 
 	public OptionInterface()
 	{
@@ -85,15 +92,17 @@ public class OptionInterface
 		
 		frame.setLocation(Settings.getInteger("oi_x"), Settings.getInteger("oi_y"));
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("left:20dlu:grow"),
 				ColumnSpec.decode("left:20dlu:grow"),
 				ColumnSpec.decode("left:20dlu:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,},
+				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
+				RowSpec.decode("16dlu:grow"),
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("16dlu"),
@@ -101,27 +110,67 @@ public class OptionInterface
 				RowSpec.decode("162dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("16dlu"),
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"),
 				RowSpec.decode("10dlu"),
 				RowSpec.decode("bottom:16dlu"),
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		JLabel label_LightOptions = new JLabel("light options:");
 		label_LightOptions.setEnabled(false);
 		label_LightOptions.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		frame.getContentPane().add(label_LightOptions, "2, 2, 1, 3, center, default");
+		frame.getContentPane().add(label_LightOptions, "2, 2, 1, 5, center, default");
 		
-		checkbox_AutoTurnOff = new JCheckBox("   auto. turn off lights (experimental v2)");
+		checkbox_AutoTurnOff = new JCheckBox(" auto. turn off lights (experimental v3)");
 		checkbox_AutoTurnOff.setToolTipText("turns the lights automatically off when the screen is near black");
+		checkbox_AutoTurnOff.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				for (Component component : panel_Threshold.getComponents())
+				{
+					component.setEnabled(checkbox_AutoTurnOff.isSelected());
+				}
+			}
+		});
 		frame.getContentPane().add(checkbox_AutoTurnOff, "3, 2, 2, 1, left, center");
 		
-		checkbox_UseGammaCorrection = new JCheckBox("   use gamma correction");
+		panel_Threshold = new JPanel();
+		frame.getContentPane().add(panel_Threshold, "3, 3, 2, 2, fill, top");
+		panel_Threshold.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("16dlu"),
+				ColumnSpec.decode("17dlu"),
+				ColumnSpec.decode("95dlu"),
+				ColumnSpec.decode("default:grow"),},
+			new RowSpec[] {
+				RowSpec.decode("default:grow"),}));
+		
+		label_ThresholdPercentage = new JLabel("10 %");
+		panel_Threshold.add(label_ThresholdPercentage, "2, 1, right, default");
+		
+		slider_Threshold = new JSlider();
+		slider_Threshold.setPaintTicks(true);
+		slider_Threshold.setMinorTickSpacing(1);
+		slider_Threshold.setMajorTickSpacing(2);
+		slider_Threshold.setValue(10);
+		slider_Threshold.setSnapToTicks(true);
+		slider_Threshold.setMaximum(30);
+		slider_Threshold.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e)
+			{
+				label_ThresholdPercentage.setText(slider_Threshold.getValue() + " %");;
+			}
+		});
+		panel_Threshold.add(slider_Threshold, "3, 1");
+		
+		label_BrightnessThreshold = new JLabel(" brightness threshold");
+		panel_Threshold.add(label_BrightnessThreshold, "4, 1, left, default");
+		
+		checkbox_UseGammaCorrection = new JCheckBox(" use gamma correction");
 		checkbox_UseGammaCorrection.setToolTipText("makes the color more like the color on your screen");
-		frame.getContentPane().add(checkbox_UseGammaCorrection, "3, 4, 2, 1, left, center");
+		frame.getContentPane().add(checkbox_UseGammaCorrection, "3, 6, 2, 1, left, center");
 		
 		JSeparator separator_1 = new JSeparator();
-		frame.getContentPane().add(separator_1, "2, 5, 3, 1, fill, center");
+		frame.getContentPane().add(separator_1, "2, 7, 3, 1, fill, center");
 		
 		JButton button_Ok = new JButton("ok");
 		button_Ok.addActionListener(new ActionListener() {
@@ -136,39 +185,59 @@ public class OptionInterface
 		JLabel label_ScreenOptions = new JLabel("capture options:");
 		label_ScreenOptions.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		label_ScreenOptions.setEnabled(false);
-		frame.getContentPane().add(label_ScreenOptions, "2, 6, center, default");
+		frame.getContentPane().add(label_ScreenOptions, "2, 8, center, default");
 		
 		JLabel label_CaptureScreen = new JLabel("    capture screen");
 		label_CaptureScreen.setToolTipText("select the screen to capture");
-		frame.getContentPane().add(label_CaptureScreen, "4, 6, left, center");
+		frame.getContentPane().add(label_CaptureScreen, "4, 8, left, center");
 		
 		JSeparator separator_3 = new JSeparator();
-		frame.getContentPane().add(separator_3, "2, 9, 3, 1, fill, center");
+		frame.getContentPane().add(separator_3, "2, 11, 3, 1, fill, center");
 		
 		JLabel label_StartupOptions = new JLabel("startup options:");
 		label_StartupOptions.setEnabled(false);
 		label_StartupOptions.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		frame.getContentPane().add(label_StartupOptions, "2, 10, 1, 3, center, center");
+		frame.getContentPane().add(label_StartupOptions, "2, 12, 1, 3, center, center");
 		
 		checkbox_ForceOn = new JCheckBox("   force on");
+		checkbox_ForceOn.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceOn.setToolTipText("turn lights on at startup");
-		frame.getContentPane().add(checkbox_ForceOn, "3, 10, left, center");
+		frame.getContentPane().add(checkbox_ForceOn, "3, 12, left, center");
 		
 		checkbox_ForceStart = new JCheckBox("   force start");
+		checkbox_ForceStart.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceStart.setToolTipText("start the immersive lighting at startup");
-		frame.getContentPane().add(checkbox_ForceStart, "4, 10, left, center");
+		frame.getContentPane().add(checkbox_ForceStart, "4, 12, left, center");
 		
 		checkbox_ForceOff = new JCheckBox("   force off");
+		checkbox_ForceOff.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_ForceOff.setToolTipText("turn lights off at startup");
-		frame.getContentPane().add(checkbox_ForceOff, "3, 12, left, center");
+		frame.getContentPane().add(checkbox_ForceOff, "3, 14, left, center");
 		
 		checkbox_Log = new JCheckBox("   log");
+		checkbox_Log.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateSelectedArguments();
+			}
+		});
 		checkbox_Log.setToolTipText("create a log");
-		frame.getContentPane().add(checkbox_Log, "4, 12, left, center");
+		frame.getContentPane().add(checkbox_Log, "4, 14, left, center");
 		
 		JSeparator separator = new JSeparator();
-		frame.getContentPane().add(separator, "2, 13, 3, 1, fill, center");
-		frame.getContentPane().add(button_Ok, "2, 14, fill, fill");
+		frame.getContentPane().add(separator, "2, 15, 3, 1, fill, center");
+		frame.getContentPane().add(button_Ok, "2, 16, fill, fill");
 		
 		ArrayList<String> screens = new ArrayList<String>();
 		for (int i = 0; i < GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length; i++)
@@ -183,7 +252,7 @@ public class OptionInterface
 		{
 			checkbox_Screen.setEnabled(false);
 		}
-		frame.getContentPane().add(checkbox_Screen, "3, 6, fill, center");
+		frame.getContentPane().add(checkbox_Screen, "3, 8, fill, center");
 				
 		JButton button_Cancel = new JButton("cancel");
 		button_Cancel.addActionListener(new ActionListener() {
@@ -193,7 +262,7 @@ public class OptionInterface
 				frame.dispose();
 			}
 		});
-		frame.getContentPane().add(button_Cancel, "3, 14, fill, fill");
+		frame.getContentPane().add(button_Cancel, "3, 16, fill, fill");
 		
 		JButton button_Apply = new JButton("apply");
 		button_Apply.addActionListener(new ActionListener() {
@@ -202,21 +271,21 @@ public class OptionInterface
 				saveOptions();
 			}
 		});
-		frame.getContentPane().add(button_Apply, "4, 14, fill, fill");
+		frame.getContentPane().add(button_Apply, "4, 16, fill, fill");
 		
 		JSeparator separator_2 = new JSeparator();
-		frame.getContentPane().add(separator_2, "2, 7, 3, 1, fill, center");
+		frame.getContentPane().add(separator_2, "2, 9, 3, 1, fill, center");
 		
 		JScrollPane scrollpane = new JScrollPane();
 		scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(scrollpane, "2, 8, 3, 1, fill, fill");
+		frame.getContentPane().add(scrollpane, "2, 10, 3, 1, fill, fill");
 		
 		
 		// setup list with options for all lights
 		
 			panel_Lights = new JPanel();
 			scrollpane.setViewportView(panel_Lights);
-			int rows = HBridge.countLights();
+			int rows = Control.bridge.getLights().size();
 			if (rows < 6)
 			{
 				rows = 6;
@@ -227,12 +296,12 @@ public class OptionInterface
 			scrollpane.setColumnHeaderView(lblActiveNameColor);
 			
 			// create the list
-			for (final HLight light : HBridge.lights)
+			for (final ILight light : Control.bridge.getLights())
 			{
 				final JPanel panel_options = new JPanel();
-				panel_Lights.add(panel_options, HBridge.lights.indexOf(light));
-				
-				JLabel label_Name = new JLabel(light.name);
+				panel_Lights.add(panel_options, Control.bridge.getLights().indexOf(light));
+
+				JLabel label_Name = new JLabel(light.getName());
 				label_Name.setPreferredSize(new Dimension(110, 15));
 				
 				final JList list_Algorithms = new JList();
@@ -354,6 +423,12 @@ public class OptionInterface
 	private void getOptions() // get saved options and setup window elements
 	{
 		checkbox_AutoTurnOff.setSelected(Settings.getBoolean("autoswitch"));
+		slider_Threshold.setValue(Settings.getInteger("autoswitchthreshold"));
+		for (Component component : panel_Threshold.getComponents())
+		{
+			component.setEnabled(Settings.getBoolean("autoswitch"));
+		}
+		
 		checkbox_UseGammaCorrection.setSelected(Settings.getBoolean("gammacorrection"));
 		checkbox_Screen.setSelectedIndex(Settings.getInteger("screen"));
 		
@@ -363,30 +438,45 @@ public class OptionInterface
 			{
 				case "force-on":
 					checkbox_ForceOn.setSelected(true);
+					checkbox_ForceOff.setSelected(false);
 					break;
 				case "force-off":
 					checkbox_ForceOff.setSelected(true);
+					checkbox_ForceOn.setSelected(false);
+					checkbox_ForceStart.setSelected(false);
 					break;
 				case "force-start":
 					checkbox_ForceStart.setSelected(true);
+					checkbox_ForceOff.setSelected(false);
 					break;
 				case "log":
 					checkbox_Log.setSelected(true);
 					break;
 			}
 		}
+		
+		updateSelectedArguments();
+	}
+	
+	private void updateSelectedArguments()
+	{
+		checkbox_ForceOn.setEnabled(!checkbox_ForceOff.isSelected());
+		checkbox_ForceOff.setEnabled(!checkbox_ForceOn.isSelected() && !checkbox_ForceStart.isSelected());
+		checkbox_ForceStart.setEnabled(!checkbox_ForceOff.isSelected());
+		checkbox_Log.setEnabled(true);
 	}
 	
 	private void saveOptions() // save all settings
 	{
 		Settings.set("autoswitch", checkbox_AutoTurnOff.isSelected());
+		Settings.set("autoswitchthreshold", slider_Threshold.getValue());
 		Settings.set("gammacorrection", checkbox_UseGammaCorrection.isSelected());
 		
 		Settings.set("screen", checkbox_Screen.getSelectedIndex());
 		
-		for (HLight light : HBridge.lights)
+		for (ILight light : Control.bridge.getLights())
 		{
-			JPanel panel_Light = (JPanel) panel_Lights.getComponent(HBridge.lights.indexOf(light));
+			JPanel panel_Light = (JPanel) panel_Lights.getComponent(Control.bridge.getLights().indexOf(light));
 			
 			JCheckBox checkbox_Active = (JCheckBox) panel_Light.getComponent(0);
 			Settings.Light.setActive(light, checkbox_Active.isSelected());

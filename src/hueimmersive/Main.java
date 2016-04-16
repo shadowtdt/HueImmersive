@@ -9,11 +9,11 @@ import java.util.Arrays;
 
 public class Main
 {	
-	public static UserInterface ui;
+	public static MainInterface ui;
 	public static Control hueControl;
 	
-	public static final String version = "0.5";
-	public static final int build = 18;
+	public static final String version = "0.5.1";
+	public static final int build = 19;
 	
 	public static boolean updateAvailable;
 	
@@ -22,6 +22,8 @@ public class Main
 	public static void main(String[] args) throws Exception
 	{
 		arguments.addAll(Arrays.asList(args));
+		
+		Settings.checkArguments();
 		arguments.addAll(Settings.getArguments());
 		
 		// check program arguments
@@ -37,14 +39,13 @@ public class Main
 		{
 			Settings.reset(true);
 		}
-		
-		Debug.info("program arguments", (Object[])arguments.toArray());
-		
+
 		Debug.info("program parameters",
 				"version: " + version,
 				"build: " + build,
 				"os: " + System.getProperty("os.name"),
 				"java version: " + System.getProperty("java.version"));
+		Debug.info("program arguments", (Object[])arguments.toArray());
 		
 		Settings.check();
 		Settings.debug();
@@ -55,7 +56,7 @@ public class Main
 		
 		checkForUpdate();
 		
-		ui = new UserInterface();
+		ui = new MainInterface();
 		hueControl = new Control();
 	}
 	

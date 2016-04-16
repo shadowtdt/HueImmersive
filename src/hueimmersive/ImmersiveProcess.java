@@ -1,5 +1,7 @@
 package hueimmersive;
 
+import hueimmersive.interfaces.ILight;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
@@ -293,7 +295,7 @@ public class ImmersiveProcess
 	
 	private static void setLightColor(Color[] extrColor) throws Exception // distribute the colors to the lights
 	{
-		for (HLight light : HBridge.lights)
+		for (ILight light : Control.bridge.getLights())
 		{
 			boolean active = Settings.Light.getActive(light);
 			int alg = Settings.Light.getAlgorithm(light);
