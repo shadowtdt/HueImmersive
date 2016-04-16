@@ -100,37 +100,37 @@ public class UserInterface
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			
-			UIManager.put("Label.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("Button.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("MenuBar.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("MenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("Panel.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("ToggleButton.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("RadioButton.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("CheckBox.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("ColorChooser.font", new FontUIResource("Dialog.plain", Font.PLAIN, 12));
-			UIManager.put("ComboBox.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("List.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("RadioButtonMenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("CheckBoxMenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("Menu.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("PopupMenu.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("OptionPane.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("ProgressBar.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("ScrollPane.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("Viewport.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("TabbedPane.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("Table.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("TableHeader.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("TextField.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("PasswordField.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
+			UIManager.put("Label.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("Button.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("MenuBar.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("MenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("Panel.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("ToggleButton.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("RadioButton.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("CheckBox.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("ColorChooser.font", new FontUIResource("Dialog.plain", Font.PLAIN, 26));
+			UIManager.put("ComboBox.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("List.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("RadioButtonMenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("CheckBoxMenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("Menu.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("PopupMenu.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("OptionPane.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("ProgressBar.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("ScrollPane.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("Viewport.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("TabbedPane.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("Table.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("TableHeader.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("TextField.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("PasswordField.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
 			UIManager.put("TextArea.font", new FontUIResource("Monospaced.plain", Font.PLAIN, 13));
-			UIManager.put("TextPane.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("EditorPane.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("TitledBorder.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-			UIManager.put("ToolBar.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("ToolTip.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
-			UIManager.put("Tree.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
+			UIManager.put("TextPane.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("EditorPane.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("TitledBorder.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
+			UIManager.put("ToolBar.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("ToolTip.font", new FontUIResource("Segoe UI", Font.PLAIN, 26));
+			UIManager.put("Tree.font", new FontUIResource("Tahoma", Font.PLAIN, 25));
 		} 
 		catch(Exception e)
 		{
@@ -144,7 +144,7 @@ public class UserInterface
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setResizable(false);
 		frame.setTitle("Hue Immersive");
-		frame.setBounds(100, 100, 243, 260);
+		frame.setBounds(100, 100, 435, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation(Settings.getInteger("ui_x"), Settings.getInteger("ui_y"));
 		frame.addWindowListener(new WindowAdapter() {
