@@ -1,49 +1,21 @@
 package hueimmersive;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-
-import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JPanel;
-
-import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.JSlider;
-import javax.swing.ListSelectionModel;
-
-import java.awt.Dimension;
-import java.util.ArrayList;
-
-import javax.swing.JSeparator;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseEvent;
-
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 
 public class OptionInterface {
