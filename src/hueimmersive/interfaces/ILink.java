@@ -5,31 +5,29 @@ import com.google.gson.JsonObject;
 import java.net.HttpURLConnection;
 
 
-public interface ILink
-{
-	enum ResponseType
-	{
-		NULL,
-		DATA,
-		SUCCESS,
-		ERROR
-	}
+public interface ILink {
+    String getBaseAPIurl();
 
-	String getBaseAPIurl();
+    void setBaseAPIurl(String baseAPIurl);
 
-	void setBaseAPIurl(String baseAPIurl);
+    JsonObject GET(String APIurl) throws Exception;
 
-	JsonObject GET(String APIurl) throws Exception;
+    JsonObject PUT(String APIurl, JsonObject data) throws Exception;
 
-	JsonObject PUT(String APIurl, JsonObject data) throws Exception;
+    JsonObject POST(String APIurl, JsonObject data) throws Exception;
 
-	JsonObject POST(String APIurl, JsonObject data) throws Exception;
+    JsonObject DELETE() throws Exception;
 
-	JsonObject DELETE() throws Exception;
+    boolean canConnect(HttpURLConnection connection);
 
-	boolean canConnect(HttpURLConnection connection);
+    JsonObject extractJsonObject(String response);
 
-	JsonObject extractJsonObject(String response);
+    ResponseType getResponseType(JsonObject response);
 
-	ResponseType getResponseType(JsonObject response);
+    enum ResponseType {
+        NULL,
+        DATA,
+        SUCCESS,
+        ERROR
+    }
 }

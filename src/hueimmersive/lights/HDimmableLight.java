@@ -1,55 +1,53 @@
 package hueimmersive.lights;
 
+import com.google.gson.JsonObject;
 import hueimmersive.HueBridge;
 
-import com.google.gson.JsonObject;
-
-import java.awt.Color;
+import java.awt.*;
 
 
-public class HDimmableLight extends HLight
-{
-	private int[] storedColor = new int[1];
+public class HDimmableLight extends HLight {
+    private int[] storedColor = new int[1];
 
-	public HDimmableLight(int id, HueBridge bridge) throws Exception
-	{
-		super(id, bridge);
-	}
+    public HDimmableLight(int id, HueBridge bridge) throws Exception
+    {
+        super(id, bridge);
+    }
 
-	public void setColor(Color color) throws Exception
-	{
-		float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    public Color getColor() throws Exception
+    {
+        JsonObject response = bridge.getLink().GET("/lights/" + id);
 
-		int bri = Math.round(hsbColor[2] * 255);
+        float bri = response.get("state").getAsJsonObject().get("bri").getAsFloat() / 255.0f;
 
-		JsonObject data = new JsonObject();
-		data.addProperty("bri", bri);
+        return Color.getHSBColor(0, 0, bri);
+    }
 
-		bridge.getLink().PUT("/lights/" + id + "/state/", data);
-	}
+    public void setColor(Color color) throws Exception
+    {
+        float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
-	public Color getColor() throws Exception
-	{
-		JsonObject response = bridge.getLink().GET("/lights/" + id);
+        int bri = Math.round(hsbColor[2] * 255);
 
-		float bri = response.get("state").getAsJsonObject().get("bri").getAsFloat() / 255.0f;
+        JsonObject data = new JsonObject();
+        data.addProperty("bri", bri);
 
-		return Color.getHSBColor(0, 0, bri);
-	}
+        bridge.getLink().PUT("/lights/" + id + "/state/", data);
+    }
 
-	public void storeColor() throws Exception
-	{
-		JsonObject response = bridge.getLink().GET("/lights/" + id);
+    public void storeColor() throws Exception
+    {
+        JsonObject response = bridge.getLink().GET("/lights/" + id);
 
-		storedColor[0] = response.get("state").getAsJsonObject().get("bri").getAsInt();
-	}
+        storedColor[0] = response.get("state").getAsJsonObject().get("bri").getAsInt();
+    }
 
-	public void restoreColor() throws Exception
-	{
-		JsonObject data = new JsonObject();
-		data.addProperty("bri", storedColor[0]);
-		data.addProperty("transitiontime", 1);
+    public void restoreColor() throws Exception
+    {
+        JsonObject data = new JsonObject();
+        data.addProperty("bri", storedColor[0]);
+        data.addProperty("transitiontime", 1);
 
-		bridge.getLink().PUT("/lights/" + id + "/state/", data);
-	}
+        bridge.getLink().PUT("/lights/" + id + "/state/", data);
+    }
 }
