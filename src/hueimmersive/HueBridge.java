@@ -54,7 +54,7 @@ public final class HueBridge implements IBridge
 
 		Main.ui.setConnectState(3);
 
-		JsonObject data = new JsonObject();
+		final JsonObject data = new JsonObject();
 		data.addProperty("devicetype", devicetype);
 		data.addProperty("username", username);
 
