@@ -1,10 +1,13 @@
 package hueimmersive;
 
 import hueimmersive.interfaces.ILight;
+import hueimmersive.lights.HLight;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ImmersiveProcess {
@@ -27,6 +30,11 @@ public class ImmersiveProcess {
     {
         setSettings();
         Main.ui.cpi.setStandbyIcon(CaptureSize, chunksNumX, chunksNumY);
+        // Record current state of light to detect unexpected changes
+        for (ILight light : Control.bridge.getLights())
+        {
+            if (Settings.Light.getActive(light)) previousState.put(light, light.isOn());
+        }
     }
 
     private static void setSettings()
@@ -95,7 +103,7 @@ public class ImmersiveProcess {
         //round -> exact | ceil (round up) -> less options, always transverse | nothing (round down) -> imprecise
     }
 
-    public static void execute() throws Exception // execute the process to get immersive colors based on the captured area
+    public static void execute() throws Exception // execute the proce ss to get immersive colors based on the captured area
     {
         applyChanges();
         capture();
@@ -293,11 +301,16 @@ public class ImmersiveProcess {
         {
             boolean active = Settings.Light.getActive(light);
             int alg = Settings.Light.getAlgorithm(light);
-
             if (active)
             {
-                Main.hueControl.setLight(light, extrColor[alg]);
+                //checks if light has been turned off since last command, skips if light is no longer on
+                if(previousState.get(light) == light.isOn()){
+                    Main.hueControl.setLight(light, extrColor[alg]);
+                    previousState.put(light,true);
+                }
             }
         }
     }
+
+    private static Map<ILight,Boolean> previousState = new HashMap<>();
 }

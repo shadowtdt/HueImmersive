@@ -79,6 +79,7 @@ public class Control {
             light.storeColor();
         }
 
+        ImmersiveProcess.setStandbyOutput();
         // create a loop to execute the immersive process
         captureLoop = new Timer();
         TimerTask task = new TimerTask() {

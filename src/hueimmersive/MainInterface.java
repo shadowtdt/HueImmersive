@@ -478,6 +478,14 @@ public class MainInterface {
                 try
                 {
                     slider_RefreshDelay.setEnabled(false);
+                    if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off"))
+                    {
+                        Main.hueControl.setAllActiveLightsOn(true);
+                    }
+                    if (Main.arguments.contains("force-off") && !Main.arguments.contains("force-on"))
+                    {
+                        Main.hueControl.setAllActiveLightsOn(false);
+                    }
                     Main.hueControl.startImmersiveProcess();
                 } catch (Exception e)
                 {
